@@ -1,20 +1,18 @@
 <?xml version="1.0"?>
 <package>
   <metadata>
-    <id>$id$</id>
-    <version>1.0.0.7</version>
-    <title>$title$</title>
-    <authors>$author$</authors>
-    <owners>$company$</owners>
+    <id>XRMSolutionDependencyChecker</id>
+    <version>1.0.0.0</version>
+    <authors>Joe Bonomo and Marty Barrett</authors>
+    <owners>Heartland Consultants</owners>
     <projectUrl>https://github.com/bonomo1/XRMSolutionDependencyChecker</projectUrl>
-    <iconUrl>https://static.wixstatic.com/media/073e06_55b27b559cc14b6898f5f3f3da2f8de9~mv2.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>$description$</description>
-    <summary>Checks Dependencies in an xRM solution to the target environment</summary>
+    <description>Checks Dependencies in an xRM solution to the target environment</description>
     <releaseNotes>
-       
+       1.0.0.0
+        Intitial release
     </releaseNotes>
-    <copyright>Copyright 2018 Heartland Business Systems</copyright>
+    <copyright>Copyright 2019 Heartland Consultants</copyright>
     <tags>Dynamics CRM xRM Solution Dependency Checker</tags>
     <dependencies>
       <dependency id="XrmToolBox" version="1.2018.1.20" />
