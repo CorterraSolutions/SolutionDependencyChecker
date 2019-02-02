@@ -31,7 +31,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>HBSLogo.ico</ApplicationIcon>
+    <ApplicationIcon>
+    </ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
     <Win32Resource>
@@ -188,7 +189,6 @@
     </COMReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="HBSLogo.ico" />
     <None Include="Resources\HBSDark 80x80.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
