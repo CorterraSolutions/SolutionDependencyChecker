@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
   <metadata>
     <id>XRMSolutionDependencyChecker</id>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
     <title>XRM Solution Dependency Checker</title>
     <authors>Joe Bonomo and Marty Barrett</authors>
     <owners>bonomo1</owners>
