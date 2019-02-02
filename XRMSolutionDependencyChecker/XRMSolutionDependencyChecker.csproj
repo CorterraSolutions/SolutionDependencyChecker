@@ -148,7 +148,6 @@
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>
-    <None Include="XRMSolutionDependencyChecker.nuspec" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="PluginControl.resx">
