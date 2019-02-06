@@ -16,6 +16,7 @@
     <copyright>Copyright 2019 Heartland Consultants</copyright>
     <language>en-US</language>
     <tags>XrmToolBox Crm Xrm Dynamics Dependency Solution</tags>
+    <repository type="git" url="https://github.com/bonomo1/XRMSolutionDependencyChecker" />
     <dependencies>
       <dependency id="XrmToolBox" version="1.2018.1.20" />
     </dependencies>
