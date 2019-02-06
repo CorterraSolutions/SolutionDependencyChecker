@@ -193,73 +193,32 @@ namespace XRMSolutionDependencyChecker
                 return "default";
         }
 
-        private void btn_ConnectSource_Click(object sender, EventArgs e)
-        {
-            string connectionString = txt_Source_ConnectionString.Text;
-            sourceEnviornment = new CrmServiceClient(connectionString);
-
-            // Populate solutions in drop down
-            string Query_Solutions = 
-                @"<fetch version='1.0' output-format='xml-platform' mapping='logical' distinct='false'>
-                    <entity name='solution'>
-                        <attribute name='friendlyname'/>
-                        <attribute name='createdon'/>
-                        <attribute name='solutionid'/>
-                        <attribute name='uniquename'/>
-                        <order attribute='createdon' descending='true'/>
-                        <filter type='and'>
-                            <condition attribute='isvisible' operator='eq' value='1' />
-                        </filter>
-                    </entity>
-                </fetch>";
-            EntityCollection Solutions = sourceEnviornment.RetrieveMultiple(new FetchExpression(Query_Solutions));
-
-            Solutions_Combobox.Text = "Solutions from source enviornment";
-            Solutions_Combobox.Refresh();
-
-            Solutions_Combobox.Items.Clear();
-
-            List<Entity> orderedEntities = Solutions.Entities.OrderBy(x => x.Attributes["friendlyname"]).ToList(); // sorts elements in ascending order depending on friendly name
-
-            sourceSolutions.Clear();
-            for (int i = 0; i < orderedEntities.Count; i++)
-            {
-                Solutions_Combobox.Items.Add((string)orderedEntities[i]["friendlyname"]);
-                sourceSolutions.Add(i, orderedEntities[i]);
-            }
-
-            Solutions_Combobox.DropDownWidth = OpenSolution_xRM.Width;
-        }
-
-        private void Solutions_Combobox_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            //if (ProgressPanel.Visible != true)
-            //    this.Height = this.Height + ProgressPanel.Height;
-
-            //ProgressPanel.Visible = true;
-
-            int SelectedIndex = Solutions_Combobox.SelectedIndex;
-            string SolutionName = (string)sourceSolutions[SelectedIndex]["uniquename"];
-            Guid SolutionId = (Guid)sourceSolutions[SelectedIndex]["solutionid"];
-
-            ExportSolutionRequest ExportSolution_Request = new ExportSolutionRequest
-            {
-                Managed = false,
-                SolutionName = SolutionName
-            };
-            ExportSolutionResponse ExportedSolution = (ExportSolutionResponse)sourceEnviornment.Execute(ExportSolution_Request);
-
-            string Status = ShowMissingComponents(ExportedSolution.ExportSolutionFile);
-
-            if (Status == "Succeeded")
-                output_txt.Text = $@"Found missing dependencies in target enviornment...{Environment.NewLine}{SolutionName}. {Environment.NewLine}Output available at: {txt_OutputPath.Text}\dependencies.csv";
-            else if (Status == "No Missing Components")
-                output_txt.Text = "There were no missing components in the target enviornment" + Environment.NewLine + SolutionName;
-            else
-                output_txt.Text = Status;
-        }
-
         private void SolutionComponents_ListView_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void OpenSolution_Computer_Enter(object sender, EventArgs e)
+        {
+
+        }
+
+        private void groupBox1_Enter(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label2_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label2_Click_1(object sender, EventArgs e)
+        {
+
+        }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
         {
 
         }
