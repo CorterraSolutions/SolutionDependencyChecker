@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Options xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <AllowLogUsage xsi:nil="true" />
+  <CheckUpdateOnStartup>true</CheckUpdateOnStartup>
+  <CloseEachPluginSilently>false</CloseEachPluginSilently>
+  <CloseOpenedPluginsSilently>false</CloseOpenedPluginsSilently>
+  <ClosePluginsSilentlyOnWindowsShutdown>true</ClosePluginsSilentlyOnWindowsShutdown>
+  <DisplayLargeIcons>true</DisplayLargeIcons>
+  <DisplayOrder>Alphabetically</DisplayOrder>
+  <DisplayPluginsStoreOnlyIfUpdates>false</DisplayPluginsStoreOnlyIfUpdates>
+  <DisplayPluginsStoreOnStartup>true</DisplayPluginsStoreOnStartup>
+  <DisplayRecentlyUpdatedFirst>false</DisplayRecentlyUpdatedFirst>
+  <DoNotCheckForUpdates>false</DoNotCheckForUpdates>
+  <DoNotRememberPluginsWithoutConnection>false</DoNotRememberPluginsWithoutConnection>
+  <DoNotShowStartPage>false</DoNotShowStartPage>
+  <HiddenPlugins />
+  <LastAdvertisementDisplay>0001-01-01T00:00:00</LastAdvertisementDisplay>
+  <LastPlugin />
+  <LastUpdateCheck>2019-06-28T14:56:09.9081404-05:00</LastUpdateCheck>
+  <MergeConnectionFiles>false</MergeConnectionFiles>
+  <MostUsedList />
+  <MruItemsToDisplay>10</MruItemsToDisplay>
+  <PluginsListDocking>Document</PluginsListDocking>
+  <PluginsListIsHidden>false</PluginsListIsHidden>
+  <PluginsStoreShowIncompatible xsi:nil="true" />
+  <PluginsStoreShowInstalled xsi:nil="true" />
+  <PluginsStoreShowNew xsi:nil="true" />
+  <PluginsStoreShowUpdates xsi:nil="true" />
+  <PluginsUpdateSkip />
+  <RememberSession>false</RememberSession>
+  <ReuseConnections>false</ReuseConnections>
+  <ShowPluginUpdatesPanelAtStartup>true</ShowPluginUpdatesPanelAtStartup>
+  <FormSize>
+    <Height>728</Height>
+    <IsMaximized>false</IsMaximized>
+    <Width>1085</Width>
+  </FormSize>
+  <Theme>Light theme</Theme>
+</Options>
