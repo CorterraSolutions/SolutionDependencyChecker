@@ -28,14 +28,65 @@ namespace XRMSolutionDependencyChecker
             {
                 { 1, "Entity" },
                 { 2, "Field" },
-                { 10, "Relationship" },
+                { 3, "Relationship" },
+                { 4, "Attribute Picklist Value" },
+                { 5, "Attribute Lookup Value" },
+                { 6, "View Attribute" },
+                { 7, "Localized Label" },
+                { 8, "Relationship Extra Condition" },
+                { 9, "Option Set" },
+                { 10, "Entity Relationship" },
+                { 11, "Entity Relationship Role" },
+                { 12, "Entity Relationship Relationships" },
+                { 13, "Managed Property" },
+                { 14, "Entity Key" },
+                { 16, "Privilege" },
+                { 17, "PrivilegeObjectTypeCode" },
+                { 18, "Index" },
                 { 20, "Role" },
+                { 21, "Role Privilege" },
+                { 22, "Display String" },
+                { 23, "Display String Map" },
+                { 24, "Form" },
+                { 25, "Organization" },
                 { 26, "View" },
                 { 29, "Dialog/Workflow" },
+                { 31, "Report" },
+                { 32, "Report Entity" },
+                { 33, "Report Category" },
+                { 34, "Report Visibility" },
+                { 35, "Attachment" },
+                { 36, "Email Template" },
+                { 37, "Contract Template" },
+                { 38, "KB Article Template" },
+                { 39, "Mail Merge Template" },
+                { 44, "Duplicate Rule" },
+                { 45, "Duplicate Rule Condition" },
+                { 46, "Entity Map" },
+                { 47, "Attribute Map" },
+                { 48, "Ribbon Command" },
+                { 49, "Ribbon Context Group" },
+                { 50, "Ribbon Customization" },
+                { 52, "Ribbon Rule" },
+                { 53, "Ribbon Tab To Command Map" },
+                { 55, "Ribbon Diff" },
                 { 59, "Chart" },
                 { 60, "View" },
                 { 61, "Web Resource" },
-                { 90, "DLL Assembly"}
+                { 62, "Site Map" },
+                { 63, "Connection Role" },
+                { 64, "Complex Control" },
+                { 65, "Hierachy Rule" },
+                { 66, "Custom Control" },
+                { 68, "Custom Control Default Config" },
+                { 70, "Field Security Profile" },
+                { 71, "Field Permission" },
+                { 90, "Plugin Type"},
+                { 91, "Plugin Assembly" },
+                { 92, "SDK Message Processing Step" },
+                { 93, "SDK Message Processing Step Image" },
+                { 95, "Service Endpoint" },
+
             };
 
         public PluginControl()
@@ -130,8 +181,11 @@ namespace XRMSolutionDependencyChecker
                 RetrieveMissingComponentsResponse GetMissingComponents = (RetrieveMissingComponentsResponse)base.Service.Execute(GetMissingComponents_Request);
 
                 if (GetMissingComponents.MissingComponents.Count() == 0)
+                {
+                    panel1.Visible = false;
                     return "No Missing Components";
-
+                }
+                    
                 // Create csv string builder
                 var csv = new StringBuilder();
 
@@ -151,7 +205,8 @@ namespace XRMSolutionDependencyChecker
                 foreach (MissingComponent MissingComponent in GetMissingComponents.MissingComponents)
                 {
                     ListViewItem MissingComponent_ListViewItem = new ListViewItem(
-                        (TypeIcon_Dictionary.ContainsKey(MissingComponent.RequiredComponent.Type) ? TypeIcon_Dictionary[MissingComponent.RequiredComponent.Type] : "Type Code: " + MissingComponent.RequiredComponent.Type.ToString())
+                        (string.IsNullOrEmpty(MissingComponent.RequiredComponent.ParentDisplayName) ? "" : MissingComponent.RequiredComponent.ParentDisplayName + " (" + MissingComponent.RequiredComponent.ParentSchemaName + ") | ")
+                         + (TypeIcon_Dictionary.ContainsKey(MissingComponent.RequiredComponent.Type) ? TypeIcon_Dictionary[MissingComponent.RequiredComponent.Type] : "Type Code: " + MissingComponent.RequiredComponent.Type.ToString())
                         + " | " + MissingComponent.RequiredComponent.DisplayName + " | " + MissingComponent.RequiredComponent.SchemaName
                     );
 

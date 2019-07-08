@@ -98,16 +98,26 @@
             this.SolutionComponents_ListView.View = System.Windows.Forms.View.List;
             this.SolutionComponents_ListView.SelectedIndexChanged += new System.EventHandler(this.SolutionComponents_ListView_SelectedIndexChanged);
             // 
+            // output_txt
+            // 
+            this.output_txt.AutoSize = true;
+            this.output_txt.Location = new System.Drawing.Point(24, 410);
+            this.output_txt.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
+            this.output_txt.Name = "output_txt";
+            this.output_txt.Size = new System.Drawing.Size(200, 90);
+            this.output_txt.TabIndex = 25;
+            // 
             // panel1
             // 
             this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panel1.Controls.Add(this.SolutionComponents_ListView);
             this.panel1.Controls.Add(this.toolStrip2);
-            this.panel1.Location = new System.Drawing.Point(24, 435);
+            this.panel1.Location = new System.Drawing.Point(24, this.output_txt.Height + this.output_txt.Location.Y);
             this.panel1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(1940, 598);
+            this.panel1.MinimumSize = new System.Drawing.Size(1170, 0);
             this.panel1.TabIndex = 13;
             this.panel1.Visible = false;
             // 
@@ -120,7 +130,8 @@
             this.OpenSolution_Computer.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.OpenSolution_Computer.Name = "OpenSolution_Computer";
             this.OpenSolution_Computer.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
-            this.OpenSolution_Computer.Size = new System.Drawing.Size(1168, 148);
+            this.OpenSolution_Computer.Size = new System.Drawing.Size(1170, 110);
+            this.OpenSolution_Computer.MinimumSize = new System.Drawing.Size(1170, 110);
             this.OpenSolution_Computer.TabIndex = 11;
             this.OpenSolution_Computer.TabStop = false;
             this.OpenSolution_Computer.Text = "Open a solution from your computer (Must be a .zip file exported from xRM)";
@@ -143,7 +154,7 @@
             // 
             // txt_OutputPath
             // 
-            this.txt_OutputPath.Location = new System.Drawing.Point(134, 378);
+            this.txt_OutputPath.Location = new System.Drawing.Point(134, 358);
             this.txt_OutputPath.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.txt_OutputPath.Name = "txt_OutputPath";
             this.txt_OutputPath.Size = new System.Drawing.Size(1036, 31);
@@ -152,21 +163,12 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(22, 382);
+            this.label1.Location = new System.Drawing.Point(22, 362);
             this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(107, 25);
             this.label1.TabIndex = 24;
             this.label1.Text = "Output To";
-            // 
-            // output_txt
-            // 
-            this.output_txt.AutoSize = true;
-            this.output_txt.Location = new System.Drawing.Point(24, 381);
-            this.output_txt.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
-            this.output_txt.Name = "output_txt";
-            this.output_txt.Size = new System.Drawing.Size(0, 25);
-            this.output_txt.TabIndex = 25;
             // 
             // label2
             // 
@@ -200,6 +202,7 @@
             this.Controls.Add(this.txt_OutputPath);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.OpenSolution_Computer);
+            this.AutoScroll = true;
             this.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
             this.Name = "PluginControl";
             this.Size = new System.Drawing.Size(2084, 1081);
@@ -229,5 +232,6 @@
         private System.Windows.Forms.Label output_txt;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.VScrollBar vScrollBar1;
     }
 }
