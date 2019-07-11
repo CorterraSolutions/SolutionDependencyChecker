@@ -1,4 +1,6 @@
-﻿namespace XRMSolutionDependencyChecker
+﻿using System.Windows.Forms;
+
+namespace XRMSolutionDependencyChecker
 {
     partial class PluginControl 
     {
@@ -34,7 +36,8 @@
             this.InfoLabel = new System.Windows.Forms.ToolStripLabel();
             this.toolStrip2 = new System.Windows.Forms.ToolStrip();
             this.ComonentIcons = new System.Windows.Forms.ImageList(this.components);
-            this.SolutionComponents_ListView = new System.Windows.Forms.ListView();
+            //this.SolutionComponents_ListView = new System.Windows.Forms.ListView();
+            this.SolutionComponents_DataGrid = new System.Windows.Forms.DataGrid();
             this.panel1 = new System.Windows.Forms.Panel();
             this.OpenSolution_Computer = new System.Windows.Forms.GroupBox();
             this.LoadSolution_Button = new System.Windows.Forms.Button();
@@ -48,24 +51,6 @@
             this.panel1.SuspendLayout();
             this.OpenSolution_Computer.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // InfoLabel
-            // 
-            this.InfoLabel.Name = "InfoLabel";
-            this.InfoLabel.Size = new System.Drawing.Size(417, 32);
-            this.InfoLabel.Text = "Missing Components in enviornment:";
-            // 
-            // toolStrip2
-            // 
-            this.toolStrip2.ImageScalingSize = new System.Drawing.Size(32, 32);
-            this.toolStrip2.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.InfoLabel});
-            this.toolStrip2.Location = new System.Drawing.Point(0, 0);
-            this.toolStrip2.Name = "toolStrip2";
-            this.toolStrip2.Padding = new System.Windows.Forms.Padding(0);
-            this.toolStrip2.Size = new System.Drawing.Size(1940, 35);
-            this.toolStrip2.TabIndex = 0;
-            this.toolStrip2.Text = "toolStrip2";
             // 
             // ComonentIcons
             // 
@@ -82,21 +67,21 @@
             // 
             // SolutionComponents_ListView
             // 
-            this.SolutionComponents_ListView.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.SolutionComponents_ListView.FullRowSelect = true;
-            this.SolutionComponents_ListView.GridLines = true;
-            this.SolutionComponents_ListView.LabelWrap = false;
-            this.SolutionComponents_ListView.LargeImageList = this.ComonentIcons;
-            this.SolutionComponents_ListView.Location = new System.Drawing.Point(8, 44);
-            this.SolutionComponents_ListView.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
-            this.SolutionComponents_ListView.Name = "SolutionComponents_ListView";
-            this.SolutionComponents_ListView.Size = new System.Drawing.Size(1916, 550);
-            this.SolutionComponents_ListView.SmallImageList = this.ComonentIcons;
-            this.SolutionComponents_ListView.TabIndex = 1;
-            this.SolutionComponents_ListView.UseCompatibleStateImageBehavior = false;
-            this.SolutionComponents_ListView.View = System.Windows.Forms.View.List;
-            this.SolutionComponents_ListView.SelectedIndexChanged += new System.EventHandler(this.SolutionComponents_ListView_SelectedIndexChanged);
+            //this.SolutionComponents_ListView.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            //| System.Windows.Forms.AnchorStyles.Right)));
+            //this.SolutionComponents_ListView.FullRowSelect = true;
+            //this.SolutionComponents_ListView.GridLines = true;
+            //this.SolutionComponents_ListView.LabelWrap = false;
+            //this.SolutionComponents_ListView.LargeImageList = this.ComonentIcons;
+            //this.SolutionComponents_ListView.Location = new System.Drawing.Point(8, 44);
+            //this.SolutionComponents_ListView.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            //this.SolutionComponents_ListView.Name = "SolutionComponents_ListView";
+            //this.SolutionComponents_ListView.Size = new System.Drawing.Size(1916, 550);
+            //this.SolutionComponents_ListView.SmallImageList = this.ComonentIcons;
+            //this.SolutionComponents_ListView.TabIndex = 2;
+            //this.SolutionComponents_ListView.UseCompatibleStateImageBehavior = false;
+            //this.SolutionComponents_ListView.View = System.Windows.Forms.View.List;
+            //this.SolutionComponents_ListView.SelectedIndexChanged += new System.EventHandler(this.SolutionComponents_ListView_SelectedIndexChanged);
             // 
             // output_txt
             // 
@@ -107,17 +92,46 @@
             this.output_txt.Size = new System.Drawing.Size(200, 90);
             this.output_txt.TabIndex = 25;
             // 
+            // InfoLabel
+            // 
+            this.InfoLabel.Name = "InfoLabel";
+            this.InfoLabel.Size = new System.Drawing.Size(417, 32);
+            this.InfoLabel.Text = "Missing Components in enviornment:";
+            // 
+            // toolStrip2
+            // 
+            this.toolStrip2.ImageScalingSize = new System.Drawing.Size(32, 32);
+            this.toolStrip2.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.InfoLabel});
+            this.toolStrip2.Location = new System.Drawing.Point(0, 0);
+            this.toolStrip2.Name = "toolStrip2";
+            this.toolStrip2.Padding = new System.Windows.Forms.Padding(0);
+            this.toolStrip2.Size = new System.Drawing.Size(1908, 35);
+            this.toolStrip2.TabIndex = 0;
+            this.toolStrip2.Text = "toolStrip2";
+            //
+            // SolutionComponents_DataGrid
+            //
+            this.SolutionComponents_DataGrid.PreferredColumnWidth = 200;
+            this.SolutionComponents_DataGrid.Name = "SolutionComponents_GridView";
+            this.SolutionComponents_DataGrid.ReadOnly = true;
+            this.SolutionComponents_DataGrid.Location = new System.Drawing.Point(24, 40);
+            this.SolutionComponents_DataGrid.Size = new System.Drawing.Size(3320, 1000);
+            this.SolutionComponents_DataGrid.TabIndex = 1;
+            // 
             // panel1
             // 
-            this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.panel1.Controls.Add(this.SolutionComponents_ListView);
+            //this.panel1.Controls.Add(this.SolutionComponents_ListView);
+            this.panel1.Controls.Add(this.SolutionComponents_DataGrid);
             this.panel1.Controls.Add(this.toolStrip2);
             this.panel1.Location = new System.Drawing.Point(24, this.output_txt.Height + this.output_txt.Location.Y);
             this.panel1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(1940, 598);
-            this.panel1.MinimumSize = new System.Drawing.Size(1170, 0);
+            this.panel1.Size = new System.Drawing.Size(1940, 1080);
+            this.panel1.MinimumSize = new System.Drawing.Size(1940, 1080);
+            this.panel1.AutoScroll = true;
             this.panel1.TabIndex = 13;
             this.panel1.Visible = false;
             // 
@@ -202,6 +216,8 @@
             this.Controls.Add(this.txt_OutputPath);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.OpenSolution_Computer);
+            //this.Controls.Add(this.toolStrip2);
+            //this.Controls.Add(this.SolutionComponents_DataGrid);
             this.AutoScroll = true;
             this.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
             this.Name = "PluginControl";
@@ -222,7 +238,8 @@
         private System.Windows.Forms.ToolStripLabel InfoLabel;
         private System.Windows.Forms.ToolStrip toolStrip2;
         private System.Windows.Forms.ImageList ComonentIcons;
-        private System.Windows.Forms.ListView SolutionComponents_ListView;
+        //private System.Windows.Forms.ListView SolutionComponents_ListView;
+        private System.Windows.Forms.DataGrid SolutionComponents_DataGrid;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.GroupBox OpenSolution_Computer;
         private System.Windows.Forms.Button LoadSolution_Button;
@@ -232,6 +249,5 @@
         private System.Windows.Forms.Label output_txt;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TextBox textBox1;
-        private System.Windows.Forms.VScrollBar vScrollBar1;
     }
 }

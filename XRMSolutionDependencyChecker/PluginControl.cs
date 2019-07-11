@@ -23,6 +23,7 @@ namespace XRMSolutionDependencyChecker
         private Settings mySettings;
         private IOrganizationService sourceEnviornment;
         private Dictionary<int, Entity> sourceSolutions = new Dictionary<int, Entity>();
+        private DataSet gridDataSet;
         private Dictionary<int, string> TypeIcon_Dictionary =
             new Dictionary<int, string>()
             {
@@ -171,8 +172,8 @@ namespace XRMSolutionDependencyChecker
         {
             try
             {
-                SolutionComponents_ListView.Items.Clear();
-
+                //SolutionComponents_ListView.Items.Clear();
+                
                 RetrieveMissingComponentsRequest GetMissingComponents_Request = new RetrieveMissingComponentsRequest
                 {
                     CustomizationFile = ExportedSolution
@@ -182,10 +183,31 @@ namespace XRMSolutionDependencyChecker
 
                 if (GetMissingComponents.MissingComponents.Count() == 0)
                 {
-                    panel1.Visible = false;
+                    SolutionComponents_DataGrid.Visible = false;
+                    toolStrip2.Visible = false;
                     return "No Missing Components";
                 }
-                    
+
+                gridDataSet = new DataSet("gridDataSet");
+                DataTable tComp = new DataTable("Components");
+                DataColumn cDType = new DataColumn("Dependent Component Type", typeof(string));
+                DataColumn cDDisplay = new DataColumn("Dependent Component Display Name", typeof(string));
+                DataColumn cDSchema = new DataColumn("Dependent Component Schema Name", typeof(string));
+                DataColumn cRPDisplay = new DataColumn("Required Component Parent Name", typeof(string));
+                DataColumn cRPSchema = new DataColumn("Required Component Parent Schema Name", typeof(string));
+                DataColumn cRType = new DataColumn("Required Component Type", typeof(string));
+                DataColumn cRDisplay = new DataColumn("Required Component Display Name", typeof(string));
+                DataColumn cRSchema = new DataColumn("Required Component Schema Name", typeof(string));
+                tComp.Columns.Add(cDType);
+                tComp.Columns.Add(cDDisplay);
+                tComp.Columns.Add(cDSchema);
+                tComp.Columns.Add(cRPDisplay);
+                tComp.Columns.Add(cRPSchema);
+                tComp.Columns.Add(cRType);
+                tComp.Columns.Add(cRDisplay);
+                tComp.Columns.Add(cRSchema);
+                gridDataSet.Tables.Add(tComp);
+
                 // Create csv string builder
                 var csv = new StringBuilder();
 
@@ -204,13 +226,25 @@ namespace XRMSolutionDependencyChecker
                 // loop
                 foreach (MissingComponent MissingComponent in GetMissingComponents.MissingComponents)
                 {
-                    ListViewItem MissingComponent_ListViewItem = new ListViewItem(
-                        (string.IsNullOrEmpty(MissingComponent.RequiredComponent.ParentDisplayName) ? "" : MissingComponent.RequiredComponent.ParentDisplayName + " (" + MissingComponent.RequiredComponent.ParentSchemaName + ") | ")
-                         + (TypeIcon_Dictionary.ContainsKey(MissingComponent.RequiredComponent.Type) ? TypeIcon_Dictionary[MissingComponent.RequiredComponent.Type] : "Type Code: " + MissingComponent.RequiredComponent.Type.ToString())
-                        + " | " + MissingComponent.RequiredComponent.DisplayName + " | " + MissingComponent.RequiredComponent.SchemaName
-                    );
+                    //ListViewItem MissingComponent_ListViewItem = new ListViewItem(
+                    //    (string.IsNullOrEmpty(MissingComponent.RequiredComponent.ParentDisplayName) ? "" : MissingComponent.RequiredComponent.ParentDisplayName + " (" + MissingComponent.RequiredComponent.ParentSchemaName + ") | ")
+                    //     + (TypeIcon_Dictionary.ContainsKey(MissingComponent.RequiredComponent.Type) ? TypeIcon_Dictionary[MissingComponent.RequiredComponent.Type] : "Type Code: " + MissingComponent.RequiredComponent.Type.ToString())
+                    //    + " | " + MissingComponent.RequiredComponent.DisplayName + " | " + MissingComponent.RequiredComponent.SchemaName
+                    //);
 
-                    SolutionComponents_ListView.Items.Add(MissingComponent_ListViewItem);
+                    //SolutionComponents_ListView.Items.Add(MissingComponent_ListViewItem);
+
+                    DataRow newRow;
+                    newRow = tComp.NewRow();
+                    newRow[0] = (TypeIcon_Dictionary.ContainsKey(MissingComponent.DependentComponent.Type) ? TypeIcon_Dictionary[MissingComponent.DependentComponent.Type] : "Type Code: " + MissingComponent.DependentComponent.Type.ToString());
+                    newRow[1] = MissingComponent.DependentComponent.DisplayName;
+                    newRow[2] = MissingComponent.DependentComponent.SchemaName;
+                    newRow[3] = MissingComponent.RequiredComponent.ParentDisplayName;
+                    newRow[4] = MissingComponent.RequiredComponent.ParentSchemaName;
+                    newRow[5] = (TypeIcon_Dictionary.ContainsKey(MissingComponent.RequiredComponent.Type) ? TypeIcon_Dictionary[MissingComponent.RequiredComponent.Type] : "Type Code: " + MissingComponent.RequiredComponent.Type.ToString());
+                    newRow[6] = MissingComponent.RequiredComponent.DisplayName;
+                    newRow[7] = MissingComponent.RequiredComponent.SchemaName;
+                    tComp.Rows.Add(newRow);
 
                     csv.AppendLine(string.Format("{0},{1},{2},{3},{4},{5},{6},{7}",
                         $"{(TypeIcon_Dictionary.ContainsKey(MissingComponent.DependentComponent.Type) ? TypeIcon_Dictionary[MissingComponent.DependentComponent.Type] : "Type Code: " + MissingComponent.DependentComponent.Type.ToString())}",
@@ -227,10 +261,20 @@ namespace XRMSolutionDependencyChecker
                 // write csv file
                 File.WriteAllText($@"{txt_OutputPath.Text}\dependencies.csv", csv.ToString());
 
-                if (panel1.Visible != true)
-                    this.Height = this.Height + panel1.Height;
+                SolutionComponents_DataGrid.SetDataBinding(gridDataSet,"Components");
 
+                if (panel1.Visible != true)
+                {
+                    this.Height = this.Height + panel1.Height;
+                }
+                    
                 panel1.Visible = true;
+                
+                //if (!SolutionComponents_DataGrid.Visible)
+                //{
+                //    SolutionComponents_DataGrid.Visible = false;
+                //    toolStrip2.Visible = false;
+                //}
 
                 return "Succeeded";
             }
