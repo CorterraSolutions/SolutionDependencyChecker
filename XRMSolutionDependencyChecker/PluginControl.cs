@@ -23,19 +23,71 @@ namespace XRMSolutionDependencyChecker
         private Settings mySettings;
         private IOrganizationService sourceEnviornment;
         private Dictionary<int, Entity> sourceSolutions = new Dictionary<int, Entity>();
+        private DataSet gridDataSet;
         private Dictionary<int, string> TypeIcon_Dictionary =
             new Dictionary<int, string>()
             {
                 { 1, "Entity" },
                 { 2, "Field" },
-                { 10, "Relationship" },
+                { 3, "Relationship" },
+                { 4, "Attribute Picklist Value" },
+                { 5, "Attribute Lookup Value" },
+                { 6, "View Attribute" },
+                { 7, "Localized Label" },
+                { 8, "Relationship Extra Condition" },
+                { 9, "Option Set" },
+                { 10, "Entity Relationship" },
+                { 11, "Entity Relationship Role" },
+                { 12, "Entity Relationship Relationships" },
+                { 13, "Managed Property" },
+                { 14, "Entity Key" },
+                { 16, "Privilege" },
+                { 17, "PrivilegeObjectTypeCode" },
+                { 18, "Index" },
                 { 20, "Role" },
+                { 21, "Role Privilege" },
+                { 22, "Display String" },
+                { 23, "Display String Map" },
+                { 24, "Form" },
+                { 25, "Organization" },
                 { 26, "View" },
                 { 29, "Dialog/Workflow" },
+                { 31, "Report" },
+                { 32, "Report Entity" },
+                { 33, "Report Category" },
+                { 34, "Report Visibility" },
+                { 35, "Attachment" },
+                { 36, "Email Template" },
+                { 37, "Contract Template" },
+                { 38, "KB Article Template" },
+                { 39, "Mail Merge Template" },
+                { 44, "Duplicate Rule" },
+                { 45, "Duplicate Rule Condition" },
+                { 46, "Entity Map" },
+                { 47, "Attribute Map" },
+                { 48, "Ribbon Command" },
+                { 49, "Ribbon Context Group" },
+                { 50, "Ribbon Customization" },
+                { 52, "Ribbon Rule" },
+                { 53, "Ribbon Tab To Command Map" },
+                { 55, "Ribbon Diff" },
                 { 59, "Chart" },
                 { 60, "View" },
                 { 61, "Web Resource" },
-                { 90, "DLL Assembly"}
+                { 62, "Site Map" },
+                { 63, "Connection Role" },
+                { 64, "Complex Control" },
+                { 65, "Hierachy Rule" },
+                { 66, "Custom Control" },
+                { 68, "Custom Control Default Config" },
+                { 70, "Field Security Profile" },
+                { 71, "Field Permission" },
+                { 90, "Plugin Type"},
+                { 91, "Plugin Assembly" },
+                { 92, "SDK Message Processing Step" },
+                { 93, "SDK Message Processing Step Image" },
+                { 95, "Service Endpoint" },
+
             };
 
         public PluginControl()
@@ -87,20 +139,17 @@ namespace XRMSolutionDependencyChecker
             }
         }
 
+        /// <summary>
+        /// Open solution, send to ShowMissingComponents, and display general results
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void LoadSolution_Button_Click(object sender, EventArgs e)
         {
             OpenSolution.ShowDialog();
 
             if (OpenSolution.SafeFileName == "OpenSolution")
                 return;
-
-            //if (ProgressPanel.Visible != true)
-            //    this.Height = this.Height + ProgressPanel.Height;
-
-            //ProgressPanel.Visible = true;
-
-            //Progress_Label.Text = $"Opening...{OpenSolution.FileName + Environment.NewLine}";
-            //Progress_Label.Refresh();
 
             byte[] SolutionFile = File.ReadAllBytes(OpenSolution.FileName);
 
@@ -116,12 +165,17 @@ namespace XRMSolutionDependencyChecker
                 output_txt.Text = Status;
         }
 
+        /// <summary>
+        /// Output missing components to CSV file in user designated location and to in App grid
+        /// </summary>
+        /// <param name="ExportedSolution"></param>
+        /// <returns> String signifiying if missing components were found or not </returns>
         public string ShowMissingComponents(byte[] ExportedSolution)
         {
+            const int GRIDWIDTH_DEFAULT = 1660;
             try
             {
-                SolutionComponents_ListView.Items.Clear();
-
+                
                 RetrieveMissingComponentsRequest GetMissingComponents_Request = new RetrieveMissingComponentsRequest
                 {
                     CustomizationFile = ExportedSolution
@@ -130,7 +184,31 @@ namespace XRMSolutionDependencyChecker
                 RetrieveMissingComponentsResponse GetMissingComponents = (RetrieveMissingComponentsResponse)base.Service.Execute(GetMissingComponents_Request);
 
                 if (GetMissingComponents.MissingComponents.Count() == 0)
+                {
+                    panel1.Visible = false;
                     return "No Missing Components";
+                }
+
+                // create data table to dispaly missing component information in app
+                gridDataSet = new DataSet("gridDataSet");
+                DataTable tComp = new DataTable("Components");
+                DataColumn cDType = new DataColumn("Dependent Component Type", typeof(string));
+                DataColumn cDDisplay = new DataColumn("Dependent Component Display Name", typeof(string));
+                DataColumn cDSchema = new DataColumn("Dependent Component Schema Name", typeof(string));
+                DataColumn cRPDisplay = new DataColumn("Required Component Parent Name", typeof(string));
+                DataColumn cRPSchema = new DataColumn("Required Component Parent Schema Name", typeof(string));
+                DataColumn cRType = new DataColumn("Required Component Type", typeof(string));
+                DataColumn cRDisplay = new DataColumn("Required Component Display Name", typeof(string));
+                DataColumn cRSchema = new DataColumn("Required Component Schema Name", typeof(string));
+                tComp.Columns.Add(cDType);
+                tComp.Columns.Add(cDDisplay);
+                tComp.Columns.Add(cDSchema);
+                tComp.Columns.Add(cRPDisplay);
+                tComp.Columns.Add(cRPSchema);
+                tComp.Columns.Add(cRType);
+                tComp.Columns.Add(cRDisplay);
+                tComp.Columns.Add(cRSchema);
+                gridDataSet.Tables.Add(tComp);
 
                 // Create csv string builder
                 var csv = new StringBuilder();
@@ -150,12 +228,19 @@ namespace XRMSolutionDependencyChecker
                 // loop
                 foreach (MissingComponent MissingComponent in GetMissingComponents.MissingComponents)
                 {
-                    ListViewItem MissingComponent_ListViewItem = new ListViewItem(
-                        (TypeIcon_Dictionary.ContainsKey(MissingComponent.RequiredComponent.Type) ? TypeIcon_Dictionary[MissingComponent.RequiredComponent.Type] : "Type Code: " + MissingComponent.RequiredComponent.Type.ToString())
-                        + " | " + MissingComponent.RequiredComponent.DisplayName + " | " + MissingComponent.RequiredComponent.SchemaName
-                    );
 
-                    SolutionComponents_ListView.Items.Add(MissingComponent_ListViewItem);
+                    // Add new row to table
+                    DataRow newRow;
+                    newRow = tComp.NewRow();
+                    newRow["Dependent Component Type"] = (TypeIcon_Dictionary.ContainsKey(MissingComponent.DependentComponent.Type) ? TypeIcon_Dictionary[MissingComponent.DependentComponent.Type] : "Type Code: " + MissingComponent.DependentComponent.Type.ToString());
+                    newRow["Dependent Component Display Name"] = MissingComponent.DependentComponent.DisplayName;
+                    newRow["Dependent Component Schema Name"] = MissingComponent.DependentComponent.SchemaName;
+                    newRow["Required Component Parent Name"] = MissingComponent.RequiredComponent.ParentDisplayName;
+                    newRow["Required Component Parent Schema Name"] = MissingComponent.RequiredComponent.ParentSchemaName;
+                    newRow["Required Component Type"] = (TypeIcon_Dictionary.ContainsKey(MissingComponent.RequiredComponent.Type) ? TypeIcon_Dictionary[MissingComponent.RequiredComponent.Type] : "Type Code: " + MissingComponent.RequiredComponent.Type.ToString());
+                    newRow["Required Component Display Name"] = MissingComponent.RequiredComponent.DisplayName;
+                    newRow["Required Component Schema Name"] = MissingComponent.RequiredComponent.SchemaName;
+                    tComp.Rows.Add(newRow);
 
                     csv.AppendLine(string.Format("{0},{1},{2},{3},{4},{5},{6},{7}",
                         $"{(TypeIcon_Dictionary.ContainsKey(MissingComponent.DependentComponent.Type) ? TypeIcon_Dictionary[MissingComponent.DependentComponent.Type] : "Type Code: " + MissingComponent.DependentComponent.Type.ToString())}",
@@ -172,8 +257,32 @@ namespace XRMSolutionDependencyChecker
                 // write csv file
                 File.WriteAllText($@"{txt_OutputPath.Text}\dependencies.csv", csv.ToString());
 
+                SolutionComponents_DataGrid.SetDataBinding(gridDataSet,"Components");
+
                 if (panel1.Visible != true)
+                {
                     this.Height = this.Height + panel1.Height;
+                }
+
+                int gridWidth = GRIDWIDTH_DEFAULT;
+
+                // remove Dependent Component columns if unwanted
+                if (checkBox1.Checked == false)
+                {
+                    tComp.Columns.Remove("Dependent Component Type");
+                    tComp.Columns.Remove("Dependent Component Display Name");
+                    tComp.Columns.Remove("Dependent Component Schema Name");
+                    gridWidth -= 600;
+                }
+
+                // remove Dependent Component columns if unwanted
+                if (checkBox2.Checked == false)
+                {
+                    tComp.Columns.Remove("Required Component Parent Name");
+                    tComp.Columns.Remove("Required Component Parent Schema Name");
+                    gridWidth -= 400;
+                }
+                SolutionComponents_DataGrid.Size = new Size(gridWidth, 500);
 
                 panel1.Visible = true;
 
