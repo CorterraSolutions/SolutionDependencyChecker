@@ -112,6 +112,8 @@ namespace XRMSolutionDependencyChecker
             }
 
             txt_OutputPath.Text = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+
+            SolutionComponents_DataGridView.BackgroundColor = System.Drawing.SystemColors.Control;
         }
 
         /// <summary>
@@ -189,7 +191,9 @@ namespace XRMSolutionDependencyChecker
                     return "No Missing Components";
                 }
 
-                // create data table to dispaly missing component information in app
+
+
+                // create data table to display missing component information in app
                 gridDataSet = new DataSet("gridDataSet");
                 DataTable tComp = new DataTable("Components");
                 DataColumn cDType = new DataColumn("Dependent Component Type", typeof(string));
@@ -200,7 +204,7 @@ namespace XRMSolutionDependencyChecker
                 DataColumn cRType = new DataColumn("Required Component Type", typeof(string));
                 DataColumn cRDisplay = new DataColumn("Required Component Display Name", typeof(string));
                 DataColumn cRSchema = new DataColumn("Required Component Schema Name", typeof(string));
-                tComp.Columns.Add(cDType);
+                tComp.Columns.Add(cDType); 
                 tComp.Columns.Add(cDDisplay);
                 tComp.Columns.Add(cDSchema);
                 tComp.Columns.Add(cRPDisplay);
@@ -225,10 +229,12 @@ namespace XRMSolutionDependencyChecker
                     "Required Component ID"
                 ));
 
+                // Number rows
+                int numRows = 0;
+
                 // loop
                 foreach (MissingComponent MissingComponent in GetMissingComponents.MissingComponents)
                 {
-
                     // Add new row to table
                     DataRow newRow;
                     newRow = tComp.NewRow();
@@ -241,6 +247,7 @@ namespace XRMSolutionDependencyChecker
                     newRow["Required Component Display Name"] = MissingComponent.RequiredComponent.DisplayName;
                     newRow["Required Component Schema Name"] = MissingComponent.RequiredComponent.SchemaName;
                     tComp.Rows.Add(newRow);
+                    numRows++;
 
                     csv.AppendLine(string.Format("{0},{1},{2},{3},{4},{5},{6},{7}",
                         $"{(TypeIcon_Dictionary.ContainsKey(MissingComponent.DependentComponent.Type) ? TypeIcon_Dictionary[MissingComponent.DependentComponent.Type] : "Type Code: " + MissingComponent.DependentComponent.Type.ToString())}",
@@ -256,12 +263,15 @@ namespace XRMSolutionDependencyChecker
 
                 // write csv file
                 File.WriteAllText($@"{txt_OutputPath.Text}\dependencies.csv", csv.ToString());
+                
+                BindingSource bindingSource = new BindingSource();
+                bindingSource.DataSource = tComp;
 
-                SolutionComponents_DataGrid.SetDataBinding(gridDataSet,"Components");
+                SolutionComponents_DataGridView.DataSource = bindingSource;
 
                 if (panel1.Visible != true)
                 {
-                    this.Height = this.Height + panel1.Height;
+                    this.Height = numRows;
                 }
 
                 int gridWidth = GRIDWIDTH_DEFAULT;
@@ -282,7 +292,7 @@ namespace XRMSolutionDependencyChecker
                     tComp.Columns.Remove("Required Component Parent Schema Name");
                     gridWidth -= 400;
                 }
-                SolutionComponents_DataGrid.Size = new Size(gridWidth, 500);
+                SolutionComponents_DataGridView.Size = new Size(gridWidth, 500);
 
                 panel1.Visible = true;
 
@@ -328,6 +338,26 @@ namespace XRMSolutionDependencyChecker
         }
 
         private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void toolStripLabel1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void SolutionComponents_DataGrid_Navigate(object sender, NavigateEventArgs ne)
+        {
+
+        }
+
+        private void toolStrip2_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
+        {
+
+        }
+
+        private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
 
         }
