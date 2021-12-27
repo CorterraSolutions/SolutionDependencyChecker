@@ -1,12 +1,14 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28010.2036
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31605.320
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XRMSolutionDependencyChecker", "XRMSolutionDependencyChecker\XRMSolutionDependencyChecker.csproj", "{80F13F9F-521E-4EBB-B547-FC88F9952F81}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Images", "Images", "{5BE09AE8-2D46-42D7-9F51-810B7B839D51}"
 	ProjectSection(SolutionItems) = preProject
+		Images\CorterraLogo 32x32.png = Images\CorterraLogo 32x32.png
+		Images\CorterraLogo 80x80.png = Images\CorterraLogo 80x80.png
 		Images\HBSDark 32x32.png = Images\HBSDark 32x32.png
 		Images\HBSDark 80x80.png = Images\HBSDark 80x80.png
 	EndProjectSection

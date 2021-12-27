@@ -267,7 +267,7 @@ namespace XRMSolutionDependencyChecker
 
                 if (panel1.Visible != true)
                 {
-                    this.Height = numRows;
+                    this.Height = this.Height + panel1.Height;
                 }
 
                 int gridWidth = GRIDWIDTH_DEFAULT;
