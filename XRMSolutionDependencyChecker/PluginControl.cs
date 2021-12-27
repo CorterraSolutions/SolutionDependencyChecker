@@ -229,9 +229,6 @@ namespace XRMSolutionDependencyChecker
                     "Required Component ID"
                 ));
 
-                // Number rows
-                int numRows = 0;
-
                 // loop
                 foreach (MissingComponent MissingComponent in GetMissingComponents.MissingComponents)
                 {
@@ -247,7 +244,6 @@ namespace XRMSolutionDependencyChecker
                     newRow["Required Component Display Name"] = MissingComponent.RequiredComponent.DisplayName;
                     newRow["Required Component Schema Name"] = MissingComponent.RequiredComponent.SchemaName;
                     tComp.Rows.Add(newRow);
-                    numRows++;
 
                     csv.AppendLine(string.Format("{0},{1},{2},{3},{4},{5},{6},{7}",
                         $"{(TypeIcon_Dictionary.ContainsKey(MissingComponent.DependentComponent.Type) ? TypeIcon_Dictionary[MissingComponent.DependentComponent.Type] : "Type Code: " + MissingComponent.DependentComponent.Type.ToString())}",

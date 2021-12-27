@@ -32,6 +32,10 @@ namespace XRMSolutionDependencyChecker
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(PluginControl));
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
             this.BackgroundProgressIndicator = new System.ComponentModel.BackgroundWorker();
             this.ComonentIcons = new System.Windows.Forms.ImageList(this.components);
             this.output_txt = new System.Windows.Forms.Label();
@@ -82,10 +86,10 @@ namespace XRMSolutionDependencyChecker
             this.OpenSolution_Computer.Controls.Add(this.LoadSolution_Button);
             this.OpenSolution_Computer.Controls.Add(this.checkBox1);
             this.OpenSolution_Computer.Controls.Add(this.checkBox2);
-            this.OpenSolution_Computer.Location = new System.Drawing.Point(18, 178);
+            this.OpenSolution_Computer.Location = new System.Drawing.Point(18, 188);
             this.OpenSolution_Computer.MinimumSize = new System.Drawing.Size(878, 88);
             this.OpenSolution_Computer.Name = "OpenSolution_Computer";
-            this.OpenSolution_Computer.Size = new System.Drawing.Size(1142, 88);
+            this.OpenSolution_Computer.Size = new System.Drawing.Size(1049, 88);
             this.OpenSolution_Computer.TabIndex = 11;
             this.OpenSolution_Computer.TabStop = false;
             this.OpenSolution_Computer.Text = "Open a solution from your computer (Must be a .zip file exported from xRM)";
@@ -93,6 +97,7 @@ namespace XRMSolutionDependencyChecker
             // 
             // LoadSolution_Button
             // 
+            this.LoadSolution_Button.ForeColor = System.Drawing.Color.Black;
             this.LoadSolution_Button.Location = new System.Drawing.Point(6, 26);
             this.LoadSolution_Button.Name = "LoadSolution_Button";
             this.LoadSolution_Button.Size = new System.Drawing.Size(150, 46);
@@ -129,7 +134,7 @@ namespace XRMSolutionDependencyChecker
             // 
             // txt_OutputPath
             // 
-            this.txt_OutputPath.Location = new System.Drawing.Point(100, 286);
+            this.txt_OutputPath.Location = new System.Drawing.Point(100, 298);
             this.txt_OutputPath.Name = "txt_OutputPath";
             this.txt_OutputPath.Size = new System.Drawing.Size(778, 26);
             this.txt_OutputPath.TabIndex = 23;
@@ -137,7 +142,7 @@ namespace XRMSolutionDependencyChecker
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(16, 290);
+            this.label1.Location = new System.Drawing.Point(16, 302);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(80, 20);
             this.label1.TabIndex = 24;
@@ -157,12 +162,12 @@ namespace XRMSolutionDependencyChecker
             // 
             // textBox1
             // 
-            this.textBox1.Location = new System.Drawing.Point(24, 61);
+            this.textBox1.Location = new System.Drawing.Point(24, 71);
             this.textBox1.Margin = new System.Windows.Forms.Padding(2);
             this.textBox1.Multiline = true;
             this.textBox1.Name = "textBox1";
             this.textBox1.ReadOnly = true;
-            this.textBox1.Size = new System.Drawing.Size(956, 86);
+            this.textBox1.Size = new System.Drawing.Size(956, 99);
             this.textBox1.TabIndex = 28;
             this.textBox1.Text = resources.GetString("textBox1.Text");
             // 
@@ -175,7 +180,7 @@ namespace XRMSolutionDependencyChecker
             this.toolStrip2.Name = "toolStrip2";
             this.toolStrip2.Padding = new System.Windows.Forms.Padding(0);
             this.toolStrip2.RenderMode = System.Windows.Forms.ToolStripRenderMode.Professional;
-            this.toolStrip2.Size = new System.Drawing.Size(1650, 38);
+            this.toolStrip2.Size = new System.Drawing.Size(1650, 30);
             this.toolStrip2.TabIndex = 0;
             this.toolStrip2.Text = "toolStrip2";
             this.toolStrip2.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.toolStrip2_ItemClicked);
@@ -183,7 +188,7 @@ namespace XRMSolutionDependencyChecker
             // InfoLabel
             // 
             this.InfoLabel.Name = "InfoLabel";
-            this.InfoLabel.Size = new System.Drawing.Size(309, 33);
+            this.InfoLabel.Size = new System.Drawing.Size(309, 25);
             this.InfoLabel.Text = "Missing Components in environment:";
             // 
             // panel1
@@ -203,15 +208,45 @@ namespace XRMSolutionDependencyChecker
             this.SolutionComponents_DataGridView.AllowUserToAddRows = false;
             this.SolutionComponents_DataGridView.AllowUserToDeleteRows = false;
             this.SolutionComponents_DataGridView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this.SolutionComponents_DataGridView.BackgroundColor = System.Drawing.Color.White;
+            this.SolutionComponents_DataGridView.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = System.Drawing.Color.MidnightBlue;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.Color.White;
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.GradientActiveCaption;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.SolutionComponents_DataGridView.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             this.SolutionComponents_DataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.BackColor = System.Drawing.Color.GhostWhite;
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.SolutionComponents_DataGridView.DefaultCellStyle = dataGridViewCellStyle2;
             this.SolutionComponents_DataGridView.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.SolutionComponents_DataGridView.Location = new System.Drawing.Point(0, 38);
+            this.SolutionComponents_DataGridView.EnableHeadersVisualStyles = false;
+            this.SolutionComponents_DataGridView.GridColor = System.Drawing.Color.DarkGray;
+            this.SolutionComponents_DataGridView.Location = new System.Drawing.Point(0, 30);
             this.SolutionComponents_DataGridView.Margin = new System.Windows.Forms.Padding(1);
             this.SolutionComponents_DataGridView.Name = "SolutionComponents_DataGridView";
             this.SolutionComponents_DataGridView.ReadOnly = true;
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle3.BackColor = System.Drawing.Color.GhostWhite;
+            dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.SolutionComponents_DataGridView.RowHeadersDefaultCellStyle = dataGridViewCellStyle3;
             this.SolutionComponents_DataGridView.RowHeadersWidth = 30;
+            dataGridViewCellStyle4.BackColor = System.Drawing.Color.White;
+            this.SolutionComponents_DataGridView.RowsDefaultCellStyle = dataGridViewCellStyle4;
             this.SolutionComponents_DataGridView.RowTemplate.Height = 28;
-            this.SolutionComponents_DataGridView.Size = new System.Drawing.Size(1650, 355);
+            this.SolutionComponents_DataGridView.Size = new System.Drawing.Size(1650, 363);
             this.SolutionComponents_DataGridView.TabIndex = 2;
             this.SolutionComponents_DataGridView.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellContentClick);
             // 
