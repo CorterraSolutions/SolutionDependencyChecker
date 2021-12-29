@@ -114,6 +114,8 @@ namespace XRMSolutionDependencyChecker
             txt_OutputPath.Text = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
 
             SolutionComponents_DataGridView.BackgroundColor = System.Drawing.SystemColors.Control;
+
+            PerformAutoScale();
         }
 
         /// <summary>
@@ -174,10 +176,10 @@ namespace XRMSolutionDependencyChecker
         /// <returns> String signifiying if missing components were found or not </returns>
         public string ShowMissingComponents(byte[] ExportedSolution)
         {
-            const int GRIDWIDTH_DEFAULT = 1660;
+            //const int GRIDWIDTH_DEFAULT = 1660;
             try
             {
-                
+
                 RetrieveMissingComponentsRequest GetMissingComponents_Request = new RetrieveMissingComponentsRequest
                 {
                     CustomizationFile = ExportedSolution
@@ -191,8 +193,6 @@ namespace XRMSolutionDependencyChecker
                     return "No Missing Components";
                 }
 
-
-
                 // create data table to display missing component information in app
                 gridDataSet = new DataSet("gridDataSet");
                 DataTable tComp = new DataTable("Components");
@@ -204,7 +204,7 @@ namespace XRMSolutionDependencyChecker
                 DataColumn cRType = new DataColumn("Required Component Type", typeof(string));
                 DataColumn cRDisplay = new DataColumn("Required Component Display Name", typeof(string));
                 DataColumn cRSchema = new DataColumn("Required Component Schema Name", typeof(string));
-                tComp.Columns.Add(cDType); 
+                tComp.Columns.Add(cDType);
                 tComp.Columns.Add(cDDisplay);
                 tComp.Columns.Add(cDSchema);
                 tComp.Columns.Add(cRPDisplay);
@@ -259,18 +259,31 @@ namespace XRMSolutionDependencyChecker
 
                 // write csv file
                 File.WriteAllText($@"{txt_OutputPath.Text}\dependencies.csv", csv.ToString());
-                
+
                 BindingSource bindingSource = new BindingSource();
                 bindingSource.DataSource = tComp;
 
                 SolutionComponents_DataGridView.DataSource = bindingSource;
+
+                // Getting new sum height for number of rows in datagridview
+                int dataGridViewHeight()
+                {
+                    int sum = this.SolutionComponents_DataGridView.ColumnHeadersHeight;
+
+                    foreach (DataGridViewRow row in this.SolutionComponents_DataGridView.Rows)
+                        sum += row.Height + 1; 
+
+                    return sum;
+                }
+
+                int screen_width = Screen.PrimaryScreen.Bounds.Width;   
 
                 if (panel1.Visible != true)
                 {
                     this.Height = this.Height + panel1.Height;
                 }
 
-                int gridWidth = GRIDWIDTH_DEFAULT;
+                int gridWidth = screen_width - 25;
 
                 // remove Dependent Component columns if unwanted
                 if (checkBox1.Checked == false)
@@ -288,7 +301,8 @@ namespace XRMSolutionDependencyChecker
                     tComp.Columns.Remove("Required Component Parent Schema Name");
                     gridWidth -= 400;
                 }
-                SolutionComponents_DataGridView.Size = new Size(gridWidth, 500);
+                panel1.Width = gridWidth;
+                panel1.Height = dataGridViewHeight() + 30;
 
                 panel1.Visible = true;
 
