@@ -178,7 +178,7 @@ namespace XRMSolutionDependencyChecker
             this.toolStrip2.Name = "toolStrip2";
             this.toolStrip2.Padding = new System.Windows.Forms.Padding(0);
             this.toolStrip2.RenderMode = System.Windows.Forms.ToolStripRenderMode.Professional;
-            this.toolStrip2.Size = new System.Drawing.Size(1650, 30);
+            this.toolStrip2.Size = new System.Drawing.Size(1650, 38);
             this.toolStrip2.TabIndex = 0;
             this.toolStrip2.Text = "toolStrip2";
             this.toolStrip2.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.toolStrip2_ItemClicked);
@@ -186,7 +186,7 @@ namespace XRMSolutionDependencyChecker
             // InfoLabel
             // 
             this.InfoLabel.Name = "InfoLabel";
-            this.InfoLabel.Size = new System.Drawing.Size(309, 25);
+            this.InfoLabel.Size = new System.Drawing.Size(309, 33);
             this.InfoLabel.Text = "Missing Components in environment:";
             // 
             // panel1
@@ -228,7 +228,7 @@ namespace XRMSolutionDependencyChecker
             this.SolutionComponents_DataGridView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.SolutionComponents_DataGridView.EnableHeadersVisualStyles = false;
             this.SolutionComponents_DataGridView.GridColor = System.Drawing.Color.DarkGray;
-            this.SolutionComponents_DataGridView.Location = new System.Drawing.Point(0, 30);
+            this.SolutionComponents_DataGridView.Location = new System.Drawing.Point(0, 38);
             this.SolutionComponents_DataGridView.Margin = new System.Windows.Forms.Padding(1);
             this.SolutionComponents_DataGridView.Name = "SolutionComponents_DataGridView";
             this.SolutionComponents_DataGridView.ReadOnly = true;
@@ -244,7 +244,7 @@ namespace XRMSolutionDependencyChecker
             dataGridViewCellStyle4.BackColor = System.Drawing.Color.White;
             this.SolutionComponents_DataGridView.RowsDefaultCellStyle = dataGridViewCellStyle4;
             this.SolutionComponents_DataGridView.RowTemplate.Height = 28;
-            this.SolutionComponents_DataGridView.Size = new System.Drawing.Size(1650, 363);
+            this.SolutionComponents_DataGridView.Size = new System.Drawing.Size(1650, 355);
             this.SolutionComponents_DataGridView.TabIndex = 2;
             this.SolutionComponents_DataGridView.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellContentClick);
             // 
