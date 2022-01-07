@@ -258,7 +258,7 @@ namespace XRMSolutionDependencyChecker
                 }
 
                 // write csv file
-                File.WriteAllText($@"{txt_OutputPath.Text}\dependencies.csv", csv.ToString());
+                File.WriteAllText($@"{txt_OutputPath.Text}\SolutionDependencyChecker_" + DateTime.Now.ToString("yyyymmdd") + ".csv", csv.ToString());
 
                 BindingSource bindingSource = new BindingSource();
                 bindingSource.DataSource = tComp;
