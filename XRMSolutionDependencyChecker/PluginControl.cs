@@ -291,7 +291,6 @@ namespace XRMSolutionDependencyChecker
                     tComp.Columns.Remove("Dependent Component Type");
                     tComp.Columns.Remove("Dependent Component Display Name");
                     tComp.Columns.Remove("Dependent Component Schema Name");
-                    gridWidth -= 600;
                 }
 
                 // remove Dependent Component columns if unwanted
@@ -299,7 +298,6 @@ namespace XRMSolutionDependencyChecker
                 {
                     tComp.Columns.Remove("Required Component Parent Name");
                     tComp.Columns.Remove("Required Component Parent Schema Name");
-                    gridWidth -= 400;
                 }
                 panel1.Width = gridWidth;
                 panel1.Height = dataGridViewHeight() + 30;
