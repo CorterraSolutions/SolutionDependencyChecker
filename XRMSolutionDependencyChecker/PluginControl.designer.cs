@@ -32,10 +32,10 @@ namespace XRMSolutionDependencyChecker
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(PluginControl));
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
             this.BackgroundProgressIndicator = new System.ComponentModel.BackgroundWorker();
             this.ComonentIcons = new System.Windows.Forms.ImageList(this.components);
             this.output_txt = new System.Windows.Forms.Label();
@@ -53,6 +53,9 @@ namespace XRMSolutionDependencyChecker
             this.panel1 = new System.Windows.Forms.Panel();
             this.SolutionComponents_DataGridView = new System.Windows.Forms.DataGridView();
             this.outputText = new System.Windows.Forms.TextBox();
+            this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.progressBar = new System.Windows.Forms.ProgressBar();
+            this.progressLabel = new System.Windows.Forms.Label();
             this.OpenSolution_Computer.SuspendLayout();
             this.toolStrip2.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -206,23 +209,23 @@ namespace XRMSolutionDependencyChecker
             this.SolutionComponents_DataGridView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.SolutionComponents_DataGridView.BackgroundColor = System.Drawing.Color.White;
             this.SolutionComponents_DataGridView.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.BackColor = System.Drawing.Color.MidnightBlue;
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle1.ForeColor = System.Drawing.Color.White;
-            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.GradientActiveCaption;
-            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.SolutionComponents_DataGridView.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle5.BackColor = System.Drawing.Color.MidnightBlue;
+            dataGridViewCellStyle5.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle5.ForeColor = System.Drawing.Color.White;
+            dataGridViewCellStyle5.SelectionBackColor = System.Drawing.SystemColors.GradientActiveCaption;
+            dataGridViewCellStyle5.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.SolutionComponents_DataGridView.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle5;
             this.SolutionComponents_DataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle2.BackColor = System.Drawing.Color.GhostWhite;
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.SolutionComponents_DataGridView.DefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle6.BackColor = System.Drawing.Color.GhostWhite;
+            dataGridViewCellStyle6.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle6.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle6.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle6.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.SolutionComponents_DataGridView.DefaultCellStyle = dataGridViewCellStyle6;
             this.SolutionComponents_DataGridView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.SolutionComponents_DataGridView.EnableHeadersVisualStyles = false;
             this.SolutionComponents_DataGridView.GridColor = System.Drawing.Color.DarkGray;
@@ -230,17 +233,17 @@ namespace XRMSolutionDependencyChecker
             this.SolutionComponents_DataGridView.Margin = new System.Windows.Forms.Padding(1);
             this.SolutionComponents_DataGridView.Name = "SolutionComponents_DataGridView";
             this.SolutionComponents_DataGridView.ReadOnly = true;
-            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle3.BackColor = System.Drawing.Color.GhostWhite;
-            dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.SolutionComponents_DataGridView.RowHeadersDefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle7.BackColor = System.Drawing.Color.GhostWhite;
+            dataGridViewCellStyle7.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle7.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle7.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle7.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle7.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.SolutionComponents_DataGridView.RowHeadersDefaultCellStyle = dataGridViewCellStyle7;
             this.SolutionComponents_DataGridView.RowHeadersWidth = 30;
-            dataGridViewCellStyle4.BackColor = System.Drawing.Color.White;
-            this.SolutionComponents_DataGridView.RowsDefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle8.BackColor = System.Drawing.Color.White;
+            this.SolutionComponents_DataGridView.RowsDefaultCellStyle = dataGridViewCellStyle8;
             this.SolutionComponents_DataGridView.RowTemplate.Height = 28;
             this.SolutionComponents_DataGridView.Size = new System.Drawing.Size(1650, 363);
             this.SolutionComponents_DataGridView.TabIndex = 2;
@@ -257,6 +260,24 @@ namespace XRMSolutionDependencyChecker
             this.outputText.TabIndex = 30;
             this.outputText.Visible = false;
             // 
+            // progressBar
+            // 
+            this.progressBar.Location = new System.Drawing.Point(1236, 302);
+            this.progressBar.Name = "progressBar";
+            this.progressBar.Size = new System.Drawing.Size(237, 23);
+            this.progressBar.TabIndex = 31;
+            this.progressBar.Visible = false;
+            // 
+            // progressLabel
+            // 
+            this.progressLabel.AutoSize = true;
+            this.progressLabel.Location = new System.Drawing.Point(1154, 302);
+            this.progressLabel.Name = "progressLabel";
+            this.progressLabel.Size = new System.Drawing.Size(76, 20);
+            this.progressLabel.TabIndex = 32;
+            this.progressLabel.Text = "Progress:";
+            this.progressLabel.Visible = false;
+            // 
             // PluginControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
@@ -264,6 +285,8 @@ namespace XRMSolutionDependencyChecker
             this.AutoScroll = true;
             this.AutoSize = true;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.Controls.Add(this.progressLabel);
+            this.Controls.Add(this.progressBar);
             this.Controls.Add(this.outputText);
             this.Controls.Add(this.textBox1);
             this.Controls.Add(this.label2);
@@ -305,5 +328,8 @@ namespace XRMSolutionDependencyChecker
         private Panel panel1;
         private DataGridView SolutionComponents_DataGridView;
         private TextBox outputText;
+        private Timer timer1;
+        private ProgressBar progressBar;
+        private Label progressLabel;
     }
 }

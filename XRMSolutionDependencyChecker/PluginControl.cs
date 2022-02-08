@@ -15,11 +15,13 @@ using System.IO;
 using Microsoft.Crm.Sdk.Messages;
 using System.Runtime.InteropServices;
 using Microsoft.Xrm.Tooling.Connector;
+using XrmToolBox.Extensibility.Args;
 
 namespace XRMSolutionDependencyChecker
 {
     public partial class PluginControl : PluginControlBase
     {
+        public event EventHandler<StatusBarMessageEventArgs> SendMessageToStatusBar;
         private Settings mySettings;
         private IOrganizationService sourceEnviornment;
         private Dictionary<int, Entity> sourceSolutions = new Dictionary<int, Entity>();
@@ -129,7 +131,7 @@ namespace XRMSolutionDependencyChecker
         {
             //ShowInfoNotification("This is a notification that can lead to XrmToolBox repository", new Uri("https://github.com/MscrmTools/XrmToolBox"));
 
-            // Loads or creates the settings for the plugin
+                // Loads or creates the settings for the plugin
             if (!SettingsManager.Instance.TryLoad(GetType(), out mySettings))
             {
                 mySettings = new Settings();
@@ -180,8 +182,10 @@ namespace XRMSolutionDependencyChecker
         /// <param name="e"></param>
         private void LoadSolution_Button_Click(object sender, EventArgs e)
         {
+            progressBar.Value = 0;
             panel1.Visible = false;
             outputText.Visible = false;
+            outputText.Text = "";
             OpenSolution.ShowDialog();
 
             if (OpenSolution.SafeFileName == "OpenSolution")
@@ -189,7 +193,13 @@ namespace XRMSolutionDependencyChecker
 
             byte[] SolutionFile = File.ReadAllBytes(OpenSolution.FileName);
 
-            BackgroundProgressIndicator.RunWorkerAsync(SolutionFile);
+            BackgroundProgressIndicator.RunWorkerAsync(ShowMissingComponents(SolutionFile));
+
+            while (BackgroundProgressIndicator.IsBusy)
+            {
+                progressBar.Increment(1);
+                Application.DoEvents();
+            }
 
             string Status = ShowMissingComponents(SolutionFile);
 
@@ -198,33 +208,51 @@ namespace XRMSolutionDependencyChecker
 
             if (Status == "Succeeded" && String.IsNullOrEmpty(txt_OutputPath.Text))
             {
+                progressLabel.Visible = true;
+                progressBar.Visible = true;
                 outputText.Text = $@"No path input has been entered. Results will be saved on desktop. {Environment.NewLine}Found missing dependencies in target enviornment... {Environment.NewLine}{OpenSolution.FileName}. {Environment.NewLine}Output available at: {path}";
                 outputText.Visible = true;
             }
             else if (Status == "Invalid file path")
             {
+                progressLabel.Visible = true;
+                progressBar.Visible = true;
                 outputText.Text = "The solution has missing dependencies, but the output path does not exist. Please use a valid path.";
+                progressBar.Increment(1);
                 outputText.Visible = true;
             }
             else if (Status == "Succeeded")
             {
+                progressLabel.Visible = true;
+                progressBar.Visible = true;
                 outputText.Text = $@"Found missing dependencies in target enviornment... {Environment.NewLine}{OpenSolution.FileName}. {Environment.NewLine}Output available at: {txt_OutputPath.Text}\dependencies.csv";
                 outputText.Visible = true;
             }
             else if (Status == "No Missing Components")
             {
+                progressLabel.Visible = true;
+                progressBar.Visible = true;
                 outputText.Text = $"There were no missing components in {Environment.NewLine + OpenSolution.SafeFileName}";
+                progressBar.Increment(1);
                 outputText.Visible = true;
             }
             else
             {
+                progressLabel.Visible = true;
+                progressBar.Visible = true;
+                progressBar.Maximum = 2;
                 outputText.Text = Status;
+                progressBar.Increment(1);
                 outputText.Visible = true;
             }
 
             if (!OpenSolution.SafeFileName.Contains(".zip"))
             {
+                progressLabel.Visible = true;
+                progressBar.Visible = true;
+                progressBar.Maximum = 2;
                 outputText.Text = "Error: Expected solution is not a .zip";
+                progressBar.Increment(1);
                 outputText.Visible = true;
             }
         }
@@ -239,7 +267,6 @@ namespace XRMSolutionDependencyChecker
             //const int GRIDWIDTH_DEFAULT = 1660;
             try
             {
-
                 RetrieveMissingComponentsRequest GetMissingComponents_Request = new RetrieveMissingComponentsRequest
                 {
                     CustomizationFile = ExportedSolution
@@ -250,6 +277,7 @@ namespace XRMSolutionDependencyChecker
                 if (GetMissingComponents.MissingComponents.Count() == 0)
                 {
                     panel1.Visible = false;
+                    progressBar.Maximum = 2;
                     return "No Missing Components";
                 }
 
@@ -288,7 +316,7 @@ namespace XRMSolutionDependencyChecker
                     "Required Component Schema Name",
                     "Required Component ID"
                 ));
-
+                progressBar.Maximum = 2 + GetMissingComponents.MissingComponents.Length;
                 // loop
                 foreach (MissingComponent MissingComponent in GetMissingComponents.MissingComponents)
                 {
@@ -315,7 +343,9 @@ namespace XRMSolutionDependencyChecker
                         $"{MissingComponent.RequiredComponent.SchemaName}",
                         $"{MissingComponent.RequiredComponent.Id}"
                     ));
+                    progressBar.Increment(1);
                 }
+
                 // Desktop path
                 string path = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
 
@@ -373,6 +403,7 @@ namespace XRMSolutionDependencyChecker
 
                 panel1.Visible = true;
 
+                progressBar.Increment(1);
                 return "Succeeded";
             }
             catch (DirectoryNotFoundException e)
