@@ -183,6 +183,8 @@ namespace XRMSolutionDependencyChecker
         private void LoadSolution_Button_Click(object sender, EventArgs e)
         {
             progressBar.Value = 0;
+            progressLabel.Visible = false;
+            progressBar.Visible = false;
             panel1.Visible = false;
             outputText.Visible = false;
             outputText.Text = "";
