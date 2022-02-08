@@ -52,6 +52,7 @@ namespace XRMSolutionDependencyChecker
             this.InfoLabel = new System.Windows.Forms.ToolStripLabel();
             this.panel1 = new System.Windows.Forms.Panel();
             this.SolutionComponents_DataGridView = new System.Windows.Forms.DataGridView();
+            this.outputText = new System.Windows.Forms.TextBox();
             this.OpenSolution_Computer.SuspendLayout();
             this.toolStrip2.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -87,11 +88,10 @@ namespace XRMSolutionDependencyChecker
             this.OpenSolution_Computer.Location = new System.Drawing.Point(18, 188);
             this.OpenSolution_Computer.MinimumSize = new System.Drawing.Size(878, 88);
             this.OpenSolution_Computer.Name = "OpenSolution_Computer";
-            this.OpenSolution_Computer.Size = new System.Drawing.Size(962, 88);
+            this.OpenSolution_Computer.Size = new System.Drawing.Size(906, 88);
             this.OpenSolution_Computer.TabIndex = 11;
             this.OpenSolution_Computer.TabStop = false;
             this.OpenSolution_Computer.Text = "Open a solution from your computer (Must be a .zip file)";
-            this.OpenSolution_Computer.Enter += new System.EventHandler(this.OpenSolution_Computer_Enter);
             // 
             // LoadSolution_Button
             // 
@@ -156,7 +156,6 @@ namespace XRMSolutionDependencyChecker
             this.label2.Size = new System.Drawing.Size(561, 46);
             this.label2.TabIndex = 27;
             this.label2.Text = "Solution Dependency Checker";
-            this.label2.Click += new System.EventHandler(this.label2_Click_1);
             // 
             // textBox1
             // 
@@ -165,7 +164,7 @@ namespace XRMSolutionDependencyChecker
             this.textBox1.Multiline = true;
             this.textBox1.Name = "textBox1";
             this.textBox1.ReadOnly = true;
-            this.textBox1.Size = new System.Drawing.Size(956, 99);
+            this.textBox1.Size = new System.Drawing.Size(900, 99);
             this.textBox1.TabIndex = 28;
             this.textBox1.Text = resources.GetString("textBox1.Text");
             // 
@@ -178,15 +177,14 @@ namespace XRMSolutionDependencyChecker
             this.toolStrip2.Name = "toolStrip2";
             this.toolStrip2.Padding = new System.Windows.Forms.Padding(0);
             this.toolStrip2.RenderMode = System.Windows.Forms.ToolStripRenderMode.Professional;
-            this.toolStrip2.Size = new System.Drawing.Size(1650, 38);
+            this.toolStrip2.Size = new System.Drawing.Size(1650, 30);
             this.toolStrip2.TabIndex = 0;
             this.toolStrip2.Text = "toolStrip2";
-            this.toolStrip2.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.toolStrip2_ItemClicked);
             // 
             // InfoLabel
             // 
             this.InfoLabel.Name = "InfoLabel";
-            this.InfoLabel.Size = new System.Drawing.Size(309, 33);
+            this.InfoLabel.Size = new System.Drawing.Size(309, 25);
             this.InfoLabel.Text = "Missing Components in environment:";
             // 
             // panel1
@@ -228,7 +226,7 @@ namespace XRMSolutionDependencyChecker
             this.SolutionComponents_DataGridView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.SolutionComponents_DataGridView.EnableHeadersVisualStyles = false;
             this.SolutionComponents_DataGridView.GridColor = System.Drawing.Color.DarkGray;
-            this.SolutionComponents_DataGridView.Location = new System.Drawing.Point(0, 38);
+            this.SolutionComponents_DataGridView.Location = new System.Drawing.Point(0, 30);
             this.SolutionComponents_DataGridView.Margin = new System.Windows.Forms.Padding(1);
             this.SolutionComponents_DataGridView.Name = "SolutionComponents_DataGridView";
             this.SolutionComponents_DataGridView.ReadOnly = true;
@@ -244,9 +242,20 @@ namespace XRMSolutionDependencyChecker
             dataGridViewCellStyle4.BackColor = System.Drawing.Color.White;
             this.SolutionComponents_DataGridView.RowsDefaultCellStyle = dataGridViewCellStyle4;
             this.SolutionComponents_DataGridView.RowTemplate.Height = 28;
-            this.SolutionComponents_DataGridView.Size = new System.Drawing.Size(1650, 355);
+            this.SolutionComponents_DataGridView.Size = new System.Drawing.Size(1650, 363);
             this.SolutionComponents_DataGridView.TabIndex = 2;
-            this.SolutionComponents_DataGridView.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellContentClick);
+            // 
+            // outputText
+            // 
+            this.outputText.Location = new System.Drawing.Point(1031, 71);
+            this.outputText.Margin = new System.Windows.Forms.Padding(2);
+            this.outputText.Multiline = true;
+            this.outputText.Name = "outputText";
+            this.outputText.ReadOnly = true;
+            this.outputText.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.outputText.Size = new System.Drawing.Size(570, 205);
+            this.outputText.TabIndex = 30;
+            this.outputText.Visible = false;
             // 
             // PluginControl
             // 
@@ -255,6 +264,7 @@ namespace XRMSolutionDependencyChecker
             this.AutoScroll = true;
             this.AutoSize = true;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.Controls.Add(this.outputText);
             this.Controls.Add(this.textBox1);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.output_txt);
@@ -294,5 +304,6 @@ namespace XRMSolutionDependencyChecker
         private ToolStripLabel InfoLabel;
         private Panel panel1;
         private DataGridView SolutionComponents_DataGridView;
+        private TextBox outputText;
     }
 }
