@@ -87,6 +87,36 @@ namespace XRMSolutionDependencyChecker
                 { 92, "SDK Message Processing Step" },
                 { 93, "SDK Message Processing Step Image" },
                 { 95, "Service Endpoint" },
+                { 150, "Routing Rule" },
+                { 151, "Routing Rule Item" },
+                { 152, "SLA" },
+                { 153, "SLA Item" },
+                { 154, "Convert Rule"},
+                { 155, "Convert Rule Item" },
+                { 161, "Mobile Offline Profile" },
+                { 162, "Mobile Offline Profile Item" },
+                { 165, "Similarity Rule" },
+                { 166, "Data Source Mapping"},
+                { 201, "SDKMessage" },
+                { 202, "SDKMessageFilter" },
+                { 203, "SdkMessagePair" },
+                { 204, "SdkMessageRequest" },
+                { 205, "SdkMessageRequestField" },
+                { 206, "SdkMessageResponse" },
+                { 207, "SdkMessageResponseField" },
+                { 208, "Import Map" },
+                { 210, "WebWizard" },
+                { 300, "Canvas App" },
+                { 371, "Connector" },
+                { 372, "Connector" },
+                { 380, "Environment Variable Definition" },
+                { 381, "Environment Variable Value" },
+                { 400, "AI Project Type" },
+                { 401, "AI Project" },
+                { 402, "AI Configuration" },
+                { 430, "Entity Analytics Configuration" },
+                { 431, "Attribute Image Configuration" },
+                { 432, "Entity Image Configuration" }
 
             };
 
@@ -150,6 +180,8 @@ namespace XRMSolutionDependencyChecker
         /// <param name="e"></param>
         private void LoadSolution_Button_Click(object sender, EventArgs e)
         {
+            panel1.Visible = false;
+            outputText.Visible = false;
             OpenSolution.ShowDialog();
 
             if (OpenSolution.SafeFileName == "OpenSolution")
@@ -161,12 +193,40 @@ namespace XRMSolutionDependencyChecker
 
             string Status = ShowMissingComponents(SolutionFile);
 
-            if (Status == "Succeeded")
-                output_txt.Text = $@"Found missing dependencies in target enviornment... {Environment.NewLine}{OpenSolution.FileName}. {Environment.NewLine}Output available at: {txt_OutputPath.Text}\dependencies.csv";
+            // Desktop path
+            string path = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+
+            if (Status == "Succeeded" && String.IsNullOrEmpty(txt_OutputPath.Text))
+            {
+                outputText.Text = $@"No path input has been entered. Results will be saved on desktop. {Environment.NewLine}Found missing dependencies in target enviornment... {Environment.NewLine}{OpenSolution.FileName}. {Environment.NewLine}Output available at: {path}";
+                outputText.Visible = true;
+            }
+            else if (Status == "Invalid file path")
+            {
+                outputText.Text = "The solution has missing dependencies, but the output path does not exist. Please use a valid path.";
+                outputText.Visible = true;
+            }
+            else if (Status == "Succeeded")
+            {
+                outputText.Text = $@"Found missing dependencies in target enviornment... {Environment.NewLine}{OpenSolution.FileName}. {Environment.NewLine}Output available at: {txt_OutputPath.Text}\dependencies.csv";
+                outputText.Visible = true;
+            }
             else if (Status == "No Missing Components")
-                output_txt.Text = $"There were no missing components in {Environment.NewLine + OpenSolution.SafeFileName}";
+            {
+                outputText.Text = $"There were no missing components in {Environment.NewLine + OpenSolution.SafeFileName}";
+                outputText.Visible = true;
+            }
             else
-                output_txt.Text = Status;
+            {
+                outputText.Text = Status;
+                outputText.Visible = true;
+            }
+
+            if (!OpenSolution.SafeFileName.Contains(".zip"))
+            {
+                outputText.Text = "Error: Expected solution is not a .zip";
+                outputText.Visible = true;
+            }
         }
 
         /// <summary>
@@ -256,10 +316,19 @@ namespace XRMSolutionDependencyChecker
                         $"{MissingComponent.RequiredComponent.Id}"
                     ));
                 }
+                // Desktop path
+                string path = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
 
-                // write csv file
-                File.WriteAllText($@"{txt_OutputPath.Text}\SolutionDependencyChecker_" + DateTime.Now.ToString("yyyymmdd") + ".csv", csv.ToString());
-
+                if (String.IsNullOrEmpty(txt_OutputPath.Text))
+                {
+                    // write csv file
+                    File.WriteAllText($@"{path}\SolutionDependencyChecker_" + DateTime.Now.ToString("yyyymmdd") + ".csv", csv.ToString());
+                }
+                else
+                {
+                    // write csv file
+                    File.WriteAllText($@"{txt_OutputPath.Text}\SolutionDependencyChecker_" + DateTime.Now.ToString("yyyymmdd") + ".csv", csv.ToString());
+                }
                 BindingSource bindingSource = new BindingSource();
                 bindingSource.DataSource = tComp;
 
@@ -271,12 +340,12 @@ namespace XRMSolutionDependencyChecker
                     int sum = this.SolutionComponents_DataGridView.ColumnHeadersHeight;
 
                     foreach (DataGridViewRow row in this.SolutionComponents_DataGridView.Rows)
-                        sum += row.Height + 1; 
+                        sum += row.Height + 1;
 
                     return sum;
                 }
 
-                int screen_width = Screen.PrimaryScreen.Bounds.Width;   
+                int screen_width = Screen.PrimaryScreen.Bounds.Width;
 
                 if (panel1.Visible != true)
                 {
@@ -306,8 +375,13 @@ namespace XRMSolutionDependencyChecker
 
                 return "Succeeded";
             }
+            catch (DirectoryNotFoundException e)
+            {
+                return "Invalid file path";
+            }
             catch (Exception error)
             {
+                outputText.Text = error.ToString();
                 return error.ToString();
             }
         }
@@ -318,56 +392,6 @@ namespace XRMSolutionDependencyChecker
                 return TypeIcon_Dictionary[type];
             else
                 return "default";
-        }
-
-        private void SolutionComponents_ListView_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void OpenSolution_Computer_Enter(object sender, EventArgs e)
-        {
-
-        }
-
-        private void groupBox1_Enter(object sender, EventArgs e)
-        {
-
-        }
-
-        private void label2_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void label2_Click_1(object sender, EventArgs e)
-        {
-
-        }
-
-        private void textBox1_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void toolStripLabel1_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void SolutionComponents_DataGrid_Navigate(object sender, NavigateEventArgs ne)
-        {
-
-        }
-
-        private void toolStrip2_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
-        {
-
-        }
-
-        private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
-        {
-
         }
     }
 }
