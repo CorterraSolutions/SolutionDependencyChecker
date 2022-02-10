@@ -9,8 +9,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Images", "Images", "{5BE09A
 	ProjectSection(SolutionItems) = preProject
 		Images\CorterraLogo 32x32.png = Images\CorterraLogo 32x32.png
 		Images\CorterraLogo 80x80.png = Images\CorterraLogo 80x80.png
-		Images\HBSDark 32x32.png = Images\HBSDark 32x32.png
-		Images\HBSDark 80x80.png = Images\HBSDark 80x80.png
 	EndProjectSection
 EndProject
 Global
