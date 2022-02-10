@@ -216,7 +216,7 @@ namespace XRMSolutionDependencyChecker
                     try
                     {
                         SolutionFile = File.ReadAllBytes(OpenSolution.FileName);
-                        missingComponents = (MissingComponent[])CheckMissingComponent(SolutionFile);
+                        missingComponents = CheckMissingComponent(SolutionFile);
                     }
                     catch (Exception mcExcept)
                     {
@@ -229,6 +229,13 @@ namespace XRMSolutionDependencyChecker
                 PostWorkCallBack = eventargs =>
                 {
                     string Status;
+
+                    //Check if empty object then return
+                    if (eventargs.Result.GetType()!=typeof(MissingComponent[]))
+                    {
+                        return;
+                    }
+
                     MissingComponent[] missingComponents = (MissingComponent[])eventargs.Result;
 
                     //If none found, write to message and return
@@ -294,7 +301,7 @@ namespace XRMSolutionDependencyChecker
             {
                 LogInfo("Begin writing to grid");
                 int screen_width = Screen.PrimaryScreen.Bounds.Width;
-                int gridHeight = this.mcDataGridView.ColumnHeadersHeight;
+                int gridHeight = this.mcDataGridView.Height;
                 int gridWidth = screen_width - 25;
 
                 // loop
@@ -323,23 +330,9 @@ namespace XRMSolutionDependencyChecker
 
                 LogInfo("Check remove columns");
 
-                // remove Dependent Component columns if unwanted
-                if (checkBox1.Checked == false)
-                {
-                    mcDataGridView.Columns.Remove("Dependent Component Type");
-                    mcDataGridView.Columns.Remove("Dependent Component Display Name");
-                    mcDataGridView.Columns.Remove("Dependent Component Schema Name");
-                }
-
-                // remove Dependent Component columns if unwanted
-                if (checkBox2.Checked == false)
-                {
-                    mcDataGridView.Columns.Remove("Required Component Parent Name");
-                    mcDataGridView.Columns.Remove("Required Component Parent Schema Name");
-                }
-
-                panel1.Width = gridWidth;
-                panel1.Height = gridHeight + 30;
+                this.mcDataGridView.Height = gridHeight;
+                this.panel1.Width = gridWidth;
+                this.panel1.Height = gridHeight;
 
                 return "Success";
             }
