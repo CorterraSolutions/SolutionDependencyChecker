@@ -21,11 +21,9 @@ namespace XRMSolutionDependencyChecker
 {
     public partial class PluginControl : PluginControlBase
     {
-        string path = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+        private const string loadMessage = "Checking for dependencies...";
         private Settings mySettings;
-        private IOrganizationService sourceEnviornment;
-        private Dictionary<int, Entity> sourceSolutions = new Dictionary<int, Entity>();
-        private Dictionary<int, string> TypeIcon_Dictionary =
+        private readonly Dictionary<int, string> TypeIcon_Dictionary =
             new Dictionary<int, string>()
             {
                 { 1, "Entity" },
@@ -120,17 +118,23 @@ namespace XRMSolutionDependencyChecker
                 { 432, "Entity Image Configuration" }
 
             };
-
+        /// <summary>
+        /// Initialize component
+        /// </summary>
         public PluginControl()
         {
             InitializeComponent();
         }
 
+        /// <summary>
+        /// Load settings and initial plugin components
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void MyPluginControl_Load(object sender, EventArgs e)
         {
-            //ShowInfoNotification("This is a notification that can lead to XrmToolBox repository", new Uri("https://github.com/MscrmTools/XrmToolBox"));
-
-                // Loads or creates the settings for the plugin
+            LogInfo("=====START NEW EXECUTION=====");
+            // Loads or creates the settings for the plugin
             if (!SettingsManager.Instance.TryLoad(GetType(), out mySettings))
             {
                 mySettings = new Settings();
@@ -141,10 +145,10 @@ namespace XRMSolutionDependencyChecker
             {
                 LogInfo("Settings found and loaded");
             }
-
+            
             txt_OutputPath.Text = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
 
-            SolutionComponents_DataGridView.BackgroundColor = System.Drawing.SystemColors.Control;
+            mcDataGridView.BackgroundColor = System.Drawing.SystemColors.Control;
 
             PerformAutoScale();
         }
@@ -175,241 +179,206 @@ namespace XRMSolutionDependencyChecker
         }
 
         /// <summary>
-        /// Open solution, send to ShowMissingComponents, and display general results
+        /// On click of the Open Solution button, load a file explorer dialog. 
+        /// Once the file is selected, store in a byte array and check for errors
+        /// Finally check for solution dependencies, the main purpose of the plugin
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void LoadSolution_Button_Click(object sender, EventArgs e)
         {
+            outputText.Visible = true;
+
             byte[] SolutionFile = null;
 
             OpenSolution.ShowDialog();
 
+            //Check if a file was set or if dialog was simply closed, if closed, return
             if (OpenSolution.SafeFileName == "OpenSolution")
+            {
                 return;
+            }
 
             // If file isn't a zip, stop here
             if (!OpenSolution.SafeFileName.Contains(".zip"))
             {
-                outputText.Text = "Error: Expected solution is not a .zip";
-                outputText.Visible = true;
+                outputText.Text = "Error: Expected solution is not a .zip"+Environment.NewLine;
                 return;
             }
 
             WorkAsync(new WorkAsyncInfo
             {
-                Message = "Checking for dependencies...",
+                Message = loadMessage,
                 IsCancelable = true,
                 Work = (worker, eventargs) =>
                 {
-                    SolutionFile = File.ReadAllBytes(OpenSolution.FileName);
+                    object missingComponents;
+                    try
+                    {
+                        SolutionFile = File.ReadAllBytes(OpenSolution.FileName);
+                        missingComponents = (MissingComponent[])CheckMissingComponent(SolutionFile);
+                    }
+                    catch (Exception mcExcept)
+                    {
+                        outputText.Text += "Failed to read solution, check solution is valid" + Environment.NewLine + mcExcept.ToString() + Environment.NewLine; ;
+                        return;
+                    }
 
-                    string Status = ShowMissingComponents(SolutionFile);
-
-                    if (Status == "Succeeded" && String.IsNullOrEmpty(txt_OutputPath.Text))
-                    {
-                        outputText.Text = $@"No path input has been entered. Results will be saved on desktop. {Environment.NewLine}Found missing dependencies in target enviornment... {Environment.NewLine}{OpenSolution.FileName}. {Environment.NewLine}Output available at: {path}";
-                        outputText.Visible = true;
-                    }
-                    else if (Status == "Invalid file path")
-                    {
-                        outputText.Text = "The solution has missing dependencies, but the output path does not exist. Please use a valid path.";
-                        outputText.Visible = true;
-                    }
-                    else if (Status == "Succeeded")
-                    {
-                        outputText.Text = $@"Found missing dependencies in target enviornment... {Environment.NewLine}{OpenSolution.FileName}. {Environment.NewLine}Output available at: {txt_OutputPath.Text}\dependencies.csv";
-                        outputText.Visible = true;
-                    }
-                    else if (Status == "No Missing Components")
-                    {
-                        outputText.Text = $"There were no missing components in {Environment.NewLine + OpenSolution.SafeFileName}";
-                        outputText.Visible = true;
-                    }
-                    else
-                    {
-                        outputText.Text = Status;
-                        outputText.Visible = true;
-                    }
-                    eventargs.Result = Status;
+                    eventargs.Result = missingComponents;
                 },
                 PostWorkCallBack = eventargs =>
                 {
-                    RetrieveMissingComponentsRequest GetMissingComponents_Request = new RetrieveMissingComponentsRequest
-                    {
-                        CustomizationFile = SolutionFile
-                    };
+                    string Status;
+                    MissingComponent[] missingComponents = (MissingComponent[])eventargs.Result;
 
-                    RetrieveMissingComponentsResponse GetMissingComponents = (RetrieveMissingComponentsResponse)base.Service.Execute(GetMissingComponents_Request);
-
-                    if (GetMissingComponents.Results.Count == 0)
+                    //If none found, write to message and return
+                    if (missingComponents.Count() == 0)
                     {
+                        panel1.Visible = false;
+                        outputText.Text = "No missing components"+Environment.NewLine;
                         return;
                     }
-
-                    if (eventargs.Result.ToString() == "Invalid File Path")
-                    {
-                        return;
-                    }
-                    //create data table to display missing component information in app
-                    DataSet gridDataSet = new DataSet("gridDataSet");
-                    DataTable tComp = new DataTable("Components");
-                    DataColumn cDType = new DataColumn("Dependent Component Type", typeof(string));
-                    DataColumn cDDisplay = new DataColumn("Dependent Component Display Name", typeof(string));
-                    DataColumn cDSchema = new DataColumn("Dependent Component Schema Name", typeof(string));
-                    DataColumn cRPDisplay = new DataColumn("Required Component Parent Name", typeof(string));
-                    DataColumn cRPSchema = new DataColumn("Required Component Parent Schema Name", typeof(string));
-                    DataColumn cRType = new DataColumn("Required Component Type", typeof(string));
-                    DataColumn cRDisplay = new DataColumn("Required Component Display Name", typeof(string));
-                    DataColumn cRSchema = new DataColumn("Required Component Schema Name", typeof(string));
-                    tComp.Columns.Add(cDType);
-                    tComp.Columns.Add(cDDisplay);
-                    tComp.Columns.Add(cDSchema);
-                    tComp.Columns.Add(cRPDisplay);
-                    tComp.Columns.Add(cRPSchema);
-                    tComp.Columns.Add(cRType);
-                    tComp.Columns.Add(cRDisplay);
-                    tComp.Columns.Add(cRSchema);
-                    gridDataSet.Tables.Add(tComp);
-
-                    // loop
-                    foreach (MissingComponent MissingComponent in GetMissingComponents.MissingComponents)
-                    {
-                        DataRow newRow;
-                        newRow = tComp.NewRow();
-                        newRow["Dependent Component Type"] = (TypeIcon_Dictionary.ContainsKey(MissingComponent.DependentComponent.Type) ? TypeIcon_Dictionary[MissingComponent.DependentComponent.Type] : "Type Code: " + MissingComponent.DependentComponent.Type.ToString());
-                        newRow["Dependent Component Display Name"] = MissingComponent.DependentComponent.DisplayName;
-                        newRow["Dependent Component Schema Name"] = MissingComponent.DependentComponent.SchemaName;
-                        newRow["Required Component Parent Name"] = MissingComponent.RequiredComponent.ParentDisplayName;
-                        newRow["Required Component Parent Schema Name"] = MissingComponent.RequiredComponent.ParentSchemaName;
-                        newRow["Required Component Type"] = (TypeIcon_Dictionary.ContainsKey(MissingComponent.RequiredComponent.Type) ? TypeIcon_Dictionary[MissingComponent.RequiredComponent.Type] : "Type Code: " + MissingComponent.RequiredComponent.Type.ToString());
-                        newRow["Required Component Display Name"] = MissingComponent.RequiredComponent.DisplayName;
-                        newRow["Required Component Schema Name"] = MissingComponent.RequiredComponent.SchemaName;
-                        tComp.Rows.Add(newRow);
-                    }
-
-                   // Getting new sum height for number of rows in datagridview
-                    int dataGridViewHeight()
-                    {
-                        int sum = this.SolutionComponents_DataGridView.ColumnHeadersHeight;
-
-                        foreach (DataGridViewRow row in this.SolutionComponents_DataGridView.Rows)
-                            sum += row.Height + 1;
-
-                        return sum;
-                    }
-
-                    int screen_width = Screen.PrimaryScreen.Bounds.Width;
-
-                    if (panel1.Visible != true)
-                    {
-                        this.Height = this.Height + panel1.Height;
-                    }
-
-                    // remove Dependent Component columns if unwanted
-                    if (checkBox1.Checked == false)
-                    {
-                        tComp.Columns.Remove("Dependent Component Type");
-                        tComp.Columns.Remove("Dependent Component Display Name");
-                        tComp.Columns.Remove("Dependent Component Schema Name");
-                    }
-
-                    // remove Dependent Component columns if unwanted
-                    if (checkBox2.Checked == false)
-                    {
-                        tComp.Columns.Remove("Required Component Parent Name");
-                        tComp.Columns.Remove("Required Component Parent Schema Name");
-                    }
-
-                    int gridWidth = screen_width - 25;
-
-                    panel1.Width = gridWidth;
-                    panel1.Height = dataGridViewHeight() + 30;
-
+                    //Otherwise, make objects visible and write components found
                     panel1.Visible = true;
+                    outputText.Text = "Missing Components Found"+Environment.NewLine;
+
+                    #region Write to Grid
+                    Status = WriteGrid(missingComponents);
+                    
+                    if (Status != "Success")
+                    {
+                        outputText.Text += "FAIL: Failed to check for missing dependencies" + Environment.NewLine + Status + Environment.NewLine;
+                        return;
+                    }
+                    else
+                    {
+                        outputText.Text += "Write Grid Success"+Environment.NewLine;
+                    }
+
+                    #endregion Write to Grid
+
+                    #region Write to CSV
+                    //Check conditions before writing to CSV
+                    if (String.IsNullOrEmpty(txt_OutputPath.Text))
+                    {
+                        outputText.Text += "No output path entered. No CSV file generated"+Environment.NewLine;
+                    }
+
+                    Status = WriteCSV(missingComponents);
+
+                    if (Status !="Success")
+                    {
+                        outputText.Text += "Error writing to CSV"+Environment.NewLine;
+                    }
+                    else
+                    {
+                        outputText.Text += "Write CSV success" + Environment.NewLine;
+                    }
+                    #endregion Write to CSV 
+
+                    return;
                 },
-                AsyncArgument = null,
                 // Progress information panel size
                 MessageWidth = 340,
                 MessageHeight = 150
             });
         }
-
-
-
         /// <summary>
-        /// Output missing components to CSV file in user designated location and to in App grid
+        /// Write missing components to the grid
         /// </summary>
-        /// <param name="ExportedSolution"></param>
-        /// <returns> String signifiying if missing components were found or not </returns>
-        public string ShowMissingComponents(byte[] ExportedSolution)
+        /// <param name="missingComponents"></param>
+        /// <returns></returns>
+        public string WriteGrid(MissingComponent[] missingComponents)
         {
-            //const int GRIDWIDTH_DEFAULT = 1660;
             try
             {
-                RetrieveMissingComponentsRequest GetMissingComponents_Request = new RetrieveMissingComponentsRequest
-                {
-                    CustomizationFile = ExportedSolution
-                };
+                LogInfo("Begin writing to grid");
+                int screen_width = Screen.PrimaryScreen.Bounds.Width;
+                int gridHeight = this.mcDataGridView.ColumnHeadersHeight;
+                int gridWidth = screen_width - 25;
 
-                RetrieveMissingComponentsResponse GetMissingComponents = (RetrieveMissingComponentsResponse)base.Service.Execute(GetMissingComponents_Request);
-
-                if (GetMissingComponents.MissingComponents.Count() == 0)
+                // loop
+                foreach (MissingComponent MissingComponent in missingComponents)
                 {
-                    panel1.Visible = false;
-                    return "No Missing Components";
+                    LogInfo("Write component: "+MissingComponent.RequiredComponent.DisplayName.ToString());
+
+                    //Build row
+                    string[] row =
+                    {
+                        (TypeIcon_Dictionary.ContainsKey(MissingComponent.DependentComponent.Type) ? TypeIcon_Dictionary[MissingComponent.DependentComponent.Type] : "Type Code: " + MissingComponent.DependentComponent.Type.ToString()),
+                        MissingComponent.DependentComponent.DisplayName,
+                        MissingComponent.DependentComponent.SchemaName,
+                        MissingComponent.RequiredComponent.ParentDisplayName,
+                        MissingComponent.RequiredComponent.ParentSchemaName,
+                        (TypeIcon_Dictionary.ContainsKey(MissingComponent.RequiredComponent.Type) ? TypeIcon_Dictionary[MissingComponent.RequiredComponent.Type] : "Type Code: " + MissingComponent.RequiredComponent.Type.ToString()),
+                        MissingComponent.RequiredComponent.DisplayName,
+                        MissingComponent.RequiredComponent.SchemaName
+                    };
+                    mcDataGridView.Rows.Add(row);
+
+                    //Increment grid height
+                    gridHeight += 1;
+
+                }                
+
+                LogInfo("Check remove columns");
+
+                // remove Dependent Component columns if unwanted
+                if (checkBox1.Checked == false)
+                {
+                    mcDataGridView.Columns.Remove("Dependent Component Type");
+                    mcDataGridView.Columns.Remove("Dependent Component Display Name");
+                    mcDataGridView.Columns.Remove("Dependent Component Schema Name");
                 }
 
-                ////create data table to display missing component information in app
-                //DataSet gridDataSet = new DataSet("gridDataSet");
-                //DataTable tComp = new DataTable("Components");
-                //DataColumn cDType = new DataColumn("Dependent Component Type", typeof(string));
-                //DataColumn cDDisplay = new DataColumn("Dependent Component Display Name", typeof(string));
-                //DataColumn cDSchema = new DataColumn("Dependent Component Schema Name", typeof(string));
-                //DataColumn cRPDisplay = new DataColumn("Required Component Parent Name", typeof(string));
-                //DataColumn cRPSchema = new DataColumn("Required Component Parent Schema Name", typeof(string));
-                //DataColumn cRType = new DataColumn("Required Component Type", typeof(string));
-                //DataColumn cRDisplay = new DataColumn("Required Component Display Name", typeof(string));
-                //DataColumn cRSchema = new DataColumn("Required Component Schema Name", typeof(string));
-                //tComp.Columns.Add(cDType);
-                //tComp.Columns.Add(cDDisplay);
-                //tComp.Columns.Add(cDSchema);
-                //tComp.Columns.Add(cRPDisplay);
-                //tComp.Columns.Add(cRPSchema);
-                //tComp.Columns.Add(cRType);
-                //tComp.Columns.Add(cRDisplay);
-                //tComp.Columns.Add(cRSchema);
-                //gridDataSet.Tables.Add(tComp);
+                // remove Dependent Component columns if unwanted
+                if (checkBox2.Checked == false)
+                {
+                    mcDataGridView.Columns.Remove("Required Component Parent Name");
+                    mcDataGridView.Columns.Remove("Required Component Parent Schema Name");
+                }
 
-                // Create csv string builder
-                var csv = new StringBuilder();
+                panel1.Width = gridWidth;
+                panel1.Height = gridHeight + 30;
 
+                return "Success";
+            }
+            catch (Exception e)
+            {
+                LogInfo("Write Grid Failure "+e.ToString());
+                panel1.Visible = false; //hide grid panel
+                return "Failure";
+            }
+        }
+
+        /// <summary>
+        /// Write missing components to CSV file
+        /// </summary>
+        /// <param name="missingComponents"></param>
+        /// <returns></returns>
+        public string WriteCSV(MissingComponent[] missingComponents)
+        {
+            LogInfo("Begin writing to CSV");
+
+            // Create csv string builder
+            var csv = new StringBuilder();
+
+            try
+            {
                 // Set headers on file
                 csv.AppendLine(string.Format("{0},{1},{2},{3},{4},{5},{6},{7}",
-                    "Dependent Component Type",
-                    "Dependent Component Display Name",
-                    "Dependent Component Schema Name",
-                    "Dependent Component ID",
-                    "Required Component Type",
-                    "Required Component Display Name",
-                    "Required Component Schema Name",
-                    "Required Component ID"
-                ));
+                                "Dependent Component Type",
+                                "Dependent Component Display Name",
+                                "Dependent Component Schema Name",
+                                "Dependent Component ID",
+                                "Required Component Type",
+                                "Required Component Display Name",
+                                "Required Component Schema Name",
+                                "Required Component ID"
+                            ));
                 // loop
-                foreach (MissingComponent MissingComponent in GetMissingComponents.MissingComponents)
+                foreach (MissingComponent MissingComponent in missingComponents)
                 {
-                    //DataRow newRow;
-                    //newRow = tComp.NewRow();
-                    //newRow["Dependent Component Type"] = (TypeIcon_Dictionary.ContainsKey(MissingComponent.DependentComponent.Type) ? TypeIcon_Dictionary[MissingComponent.DependentComponent.Type] : "Type Code: " + MissingComponent.DependentComponent.Type.ToString());
-                    //newRow["Dependent Component Display Name"] = MissingComponent.DependentComponent.DisplayName;
-                    //newRow["Dependent Component Schema Name"] = MissingComponent.DependentComponent.SchemaName;
-                    //newRow["Required Component Parent Name"] = MissingComponent.RequiredComponent.ParentDisplayName;
-                    //newRow["Required Component Parent Schema Name"] = MissingComponent.RequiredComponent.ParentSchemaName;
-                    //newRow["Required Component Type"] = (TypeIcon_Dictionary.ContainsKey(MissingComponent.RequiredComponent.Type) ? TypeIcon_Dictionary[MissingComponent.RequiredComponent.Type] : "Type Code: " + MissingComponent.RequiredComponent.Type.ToString());
-                    //newRow["Required Component Display Name"] = MissingComponent.RequiredComponent.DisplayName;
-                    //newRow["Required Component Schema Name"] = MissingComponent.RequiredComponent.SchemaName;
-                    //tComp.Rows.Add(newRow);
-
                     csv.AppendLine(string.Format("{0},{1},{2},{3},{4},{5},{6},{7}",
                         $"{(TypeIcon_Dictionary.ContainsKey(MissingComponent.DependentComponent.Type) ? TypeIcon_Dictionary[MissingComponent.DependentComponent.Type] : "Type Code: " + MissingComponent.DependentComponent.Type.ToString())}",
                         $"{MissingComponent.DependentComponent.DisplayName}",
@@ -421,69 +390,57 @@ namespace XRMSolutionDependencyChecker
                         $"{MissingComponent.RequiredComponent.Id}"
                     ));
                 }
+            }
+            catch (Exception csvError)
+            {
+                LogInfo("ERROR: "+csvError);
+                return "Failure";
+            }
 
-                if (String.IsNullOrEmpty(txt_OutputPath.Text))
+            // write csv file
+            File.WriteAllText($@"{txt_OutputPath.Text}\SolutionDependencyChecker_" + DateTime.Now.ToString("yyyymmdd") + ".csv", csv.ToString());
+
+            LogInfo("Success writing to CSV");
+            return "Success";
+        }
+
+        /// <summary>
+        /// Output missing components to CSV file in user designated location and to in App grid
+        /// </summary>
+        /// <param name="ExportedSolution"></param>
+        /// <returns> String signifiying if missing components were found or not </returns>
+        public object CheckMissingComponent(byte[] ExportedSolution)
+        {
+            object missingComponents;
+            try
+            {
+                RetrieveMissingComponentsRequest GetMissingComponents_Request = new RetrieveMissingComponentsRequest
                 {
-                    // write csv file
-                    File.WriteAllText($@"{path}\SolutionDependencyChecker_" + DateTime.Now.ToString("yyyymmdd") + ".csv", csv.ToString());
-                }
-                else
-                {
-                    // write csv file
-                    File.WriteAllText($@"{txt_OutputPath.Text}\SolutionDependencyChecker_" + DateTime.Now.ToString("yyyymmdd") + ".csv", csv.ToString());
-                }
+                    CustomizationFile = ExportedSolution
+                };
 
-                //// Getting new sum height for number of rows in datagridview
-                //int dataGridViewHeight()
-                //{
-                //    int sum = this.SolutionComponents_DataGridView.ColumnHeadersHeight;
-
-                //    foreach (DataGridViewRow row in this.SolutionComponents_DataGridView.Rows)
-                //        sum += row.Height + 1;
-
-                //    return sum;
-                //}
-
-                //int screen_width = Screen.PrimaryScreen.Bounds.Width;
-
-                //if (panel1.Visible != true)
-                //{
-                //    this.Height = this.Height + panel1.Height;
-                //}
-
-                //// remove Dependent Component columns if unwanted
-                //if (checkBox1.Checked == false)
-                //{
-                //    tComp.Columns.Remove("Dependent Component Type");
-                //    tComp.Columns.Remove("Dependent Component Display Name");
-                //    tComp.Columns.Remove("Dependent Component Schema Name");
-                //}
-
-                //// remove Dependent Component columns if unwanted
-                //if (checkBox2.Checked == false)
-                //{
-                //    tComp.Columns.Remove("Required Component Parent Name");
-                //    tComp.Columns.Remove("Required Component Parent Schema Name");
-                //}
-
-                //int gridWidth = screen_width - 25;
-
-                //panel1.Width = gridWidth;
-                //panel1.Height = dataGridViewHeight() + 30;
-
-                //panel1.Visible = true;
-                return "Succeeded";
+                RetrieveMissingComponentsResponse GetMissingComponents = (RetrieveMissingComponentsResponse)base.Service.Execute(GetMissingComponents_Request);
+                missingComponents = GetMissingComponents.MissingComponents;
+                return missingComponents;
             }
             catch (DirectoryNotFoundException e)
             {
-                return "Invalid file path";
+                LogInfo(e.ToString());
+                missingComponents = new object();
+                return missingComponents;
             }
             catch (Exception error)
             {
-                return error.ToString();
+                LogInfo(error.ToString());
+                missingComponents = new object();
+                return missingComponents;
             }
         }
-
+        /// <summary>
+        /// Get the Icon for the type of component
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
         public string GetTypeIcon(int type)
         {
             if (TypeIcon_Dictionary.ContainsKey(type))
