@@ -188,6 +188,8 @@ namespace XRMSolutionDependencyChecker
         private void LoadSolution_Button_Click(object sender, EventArgs e)
         {
             outputText.Visible = true;
+            outputText.Text = "";
+            mcPanel.Visible = false;
 
             byte[] SolutionFile = null;
 
@@ -233,6 +235,7 @@ namespace XRMSolutionDependencyChecker
                     //Check if empty object then return
                     if (eventargs.Result.GetType()!=typeof(MissingComponent[]))
                     {
+                        outputText.Text += "File is invalid. Please check you loaded a valid solution file";
                         return;
                     }
 
@@ -241,12 +244,12 @@ namespace XRMSolutionDependencyChecker
                     //If none found, write to message and return
                     if (missingComponents.Count() == 0)
                     {
-                        panel1.Visible = false;
+                        mcPanel.Visible = false;
                         outputText.Text = "No missing components"+Environment.NewLine;
                         return;
                     }
                     //Otherwise, make objects visible and write components found
-                    panel1.Visible = true;
+                    mcPanel.Visible = true;
                     outputText.Text = "Missing Components Found"+Environment.NewLine;
 
                     #region Write to Grid
@@ -331,15 +334,15 @@ namespace XRMSolutionDependencyChecker
                 LogInfo("Check remove columns");
 
                 this.mcDataGridView.Height = gridHeight;
-                this.panel1.Width = gridWidth;
-                this.panel1.Height = gridHeight;
+                this.mcPanel.Width = gridWidth;
+                this.mcPanel.Height = gridHeight;
 
                 return "Success";
             }
             catch (Exception e)
             {
                 LogInfo("Write Grid Failure "+e.ToString());
-                panel1.Visible = false; //hide grid panel
+                mcPanel.Visible = false; //hide grid panel
                 return "Failure";
             }
         }

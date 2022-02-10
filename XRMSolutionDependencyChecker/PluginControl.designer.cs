@@ -32,10 +32,10 @@ namespace XRMSolutionDependencyChecker
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(PluginControl));
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
             this.BackgroundProgressIndicator = new System.ComponentModel.BackgroundWorker();
             this.ComonentIcons = new System.Windows.Forms.ImageList(this.components);
             this.output_txt = new System.Windows.Forms.Label();
@@ -48,7 +48,7 @@ namespace XRMSolutionDependencyChecker
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.toolStrip2 = new System.Windows.Forms.ToolStrip();
             this.InfoLabel = new System.Windows.Forms.ToolStripLabel();
-            this.panel1 = new System.Windows.Forms.Panel();
+            this.mcPanel = new System.Windows.Forms.Panel();
             this.mcDataGridView = new System.Windows.Forms.DataGridView();
             this.outputText = new System.Windows.Forms.TextBox();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
@@ -62,7 +62,7 @@ namespace XRMSolutionDependencyChecker
             this.RequiredComponentSchemaName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.OpenSolution_Computer.SuspendLayout();
             this.toolStrip2.SuspendLayout();
-            this.panel1.SuspendLayout();
+            this.mcPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.mcDataGridView)).BeginInit();
             this.SuspendLayout();
             // 
@@ -174,18 +174,18 @@ namespace XRMSolutionDependencyChecker
             this.InfoLabel.Size = new System.Drawing.Size(417, 32);
             this.InfoLabel.Text = "Missing Components in environment:";
             // 
-            // panel1
+            // mcPanel
             // 
-            this.panel1.AutoScroll = true;
-            this.panel1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.panel1.Controls.Add(this.mcDataGridView);
-            this.panel1.Controls.Add(this.toolStrip2);
-            this.panel1.Location = new System.Drawing.Point(24, 474);
-            this.panel1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(2200, 491);
-            this.panel1.TabIndex = 13;
-            this.panel1.Visible = false;
+            this.mcPanel.AutoScroll = true;
+            this.mcPanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.mcPanel.Controls.Add(this.mcDataGridView);
+            this.mcPanel.Controls.Add(this.toolStrip2);
+            this.mcPanel.Location = new System.Drawing.Point(24, 474);
+            this.mcPanel.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.mcPanel.Name = "mcPanel";
+            this.mcPanel.Size = new System.Drawing.Size(2200, 491);
+            this.mcPanel.TabIndex = 13;
+            this.mcPanel.Visible = false;
             // 
             // mcDataGridView
             // 
@@ -194,14 +194,14 @@ namespace XRMSolutionDependencyChecker
             this.mcDataGridView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.mcDataGridView.BackgroundColor = System.Drawing.Color.White;
             this.mcDataGridView.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle5.BackColor = System.Drawing.Color.MidnightBlue;
-            dataGridViewCellStyle5.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle5.ForeColor = System.Drawing.Color.White;
-            dataGridViewCellStyle5.SelectionBackColor = System.Drawing.SystemColors.GradientActiveCaption;
-            dataGridViewCellStyle5.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.mcDataGridView.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle5;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = System.Drawing.Color.MidnightBlue;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.Color.White;
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.GradientActiveCaption;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.mcDataGridView.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             this.mcDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.mcDataGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.DependentComponentType,
@@ -212,14 +212,14 @@ namespace XRMSolutionDependencyChecker
             this.RequiredComponentType,
             this.RequiredComponentDisplayName,
             this.RequiredComponentSchemaName});
-            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle6.BackColor = System.Drawing.Color.GhostWhite;
-            dataGridViewCellStyle6.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle6.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle6.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle6.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.mcDataGridView.DefaultCellStyle = dataGridViewCellStyle6;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.BackColor = System.Drawing.Color.GhostWhite;
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.mcDataGridView.DefaultCellStyle = dataGridViewCellStyle2;
             this.mcDataGridView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.mcDataGridView.EnableHeadersVisualStyles = false;
             this.mcDataGridView.GridColor = System.Drawing.Color.DarkGray;
@@ -227,17 +227,17 @@ namespace XRMSolutionDependencyChecker
             this.mcDataGridView.Margin = new System.Windows.Forms.Padding(1);
             this.mcDataGridView.Name = "mcDataGridView";
             this.mcDataGridView.ReadOnly = true;
-            dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle7.BackColor = System.Drawing.Color.GhostWhite;
-            dataGridViewCellStyle7.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle7.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle7.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle7.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle7.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.mcDataGridView.RowHeadersDefaultCellStyle = dataGridViewCellStyle7;
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle3.BackColor = System.Drawing.Color.GhostWhite;
+            dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.mcDataGridView.RowHeadersDefaultCellStyle = dataGridViewCellStyle3;
             this.mcDataGridView.RowHeadersWidth = 30;
-            dataGridViewCellStyle8.BackColor = System.Drawing.Color.White;
-            this.mcDataGridView.RowsDefaultCellStyle = dataGridViewCellStyle8;
+            dataGridViewCellStyle4.BackColor = System.Drawing.Color.White;
+            this.mcDataGridView.RowsDefaultCellStyle = dataGridViewCellStyle4;
             this.mcDataGridView.RowTemplate.Height = 28;
             this.mcDataGridView.Size = new System.Drawing.Size(2200, 453);
             this.mcDataGridView.TabIndex = 2;
@@ -323,7 +323,7 @@ namespace XRMSolutionDependencyChecker
             this.Controls.Add(this.output_txt);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.txt_OutputPath);
-            this.Controls.Add(this.panel1);
+            this.Controls.Add(this.mcPanel);
             this.Controls.Add(this.OpenSolution_Computer);
             this.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
             this.Name = "PluginControl";
@@ -332,8 +332,8 @@ namespace XRMSolutionDependencyChecker
             this.OpenSolution_Computer.ResumeLayout(false);
             this.toolStrip2.ResumeLayout(false);
             this.toolStrip2.PerformLayout();
-            this.panel1.ResumeLayout(false);
-            this.panel1.PerformLayout();
+            this.mcPanel.ResumeLayout(false);
+            this.mcPanel.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.mcDataGridView)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -353,7 +353,7 @@ namespace XRMSolutionDependencyChecker
         private System.Windows.Forms.TextBox textBox1;
         private ToolStrip toolStrip2;
         private ToolStripLabel InfoLabel;
-        private Panel panel1;
+        private Panel mcPanel;
         private DataGridView mcDataGridView;
         private TextBox outputText;
         private Timer timer1;
