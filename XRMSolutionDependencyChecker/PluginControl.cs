@@ -187,6 +187,7 @@ namespace XRMSolutionDependencyChecker
         /// <param name="e"></param>
         private void LoadSolution_Button_Click(object sender, EventArgs e)
         {
+            mcDataGridView.Rows.Clear();
             outputText.Visible = true;
             outputText.Text = "";
             mcPanel.Visible = false;
@@ -220,9 +221,10 @@ namespace XRMSolutionDependencyChecker
                         SolutionFile = File.ReadAllBytes(OpenSolution.FileName);
                         missingComponents = CheckMissingComponent(SolutionFile);
                     }
+                    //"Failed to read solution, check solution is valid"
                     catch (Exception mcExcept)
                     {
-                        outputText.Text += "Failed to read solution, check solution is valid" + Environment.NewLine + mcExcept.ToString() + Environment.NewLine; ;
+                        outputText.Text += mcExcept.Message + Environment.NewLine + mcExcept.ToString() + Environment.NewLine; ;
                         return;
                     }
 
@@ -302,6 +304,7 @@ namespace XRMSolutionDependencyChecker
         {
             try
             {
+                mcDataGridView.Rows.Clear();
                 LogInfo("Begin writing to grid");
                 int screen_width = Screen.PrimaryScreen.Bounds.Width;
                 int gridHeight = this.mcDataGridView.Height;
