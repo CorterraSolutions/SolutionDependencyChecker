@@ -12,10 +12,14 @@ using Microsoft.Xrm.Sdk.Query;
 using Microsoft.Xrm.Sdk;
 using McTools.Xrm.Connection;
 using System.IO;
+using System.IO.Compression;
 using Microsoft.Crm.Sdk.Messages;
 using System.Runtime.InteropServices;
 using Microsoft.Xrm.Tooling.Connector;
 using XrmToolBox.Extensibility.Args;
+using System.Xml;
+using System.Windows.Controls;
+using System.Web.Services.Description;
 
 namespace XRMSolutionDependencyChecker
 {
@@ -190,6 +194,7 @@ namespace XRMSolutionDependencyChecker
             outputText.Visible = true;
             outputText.Text = "";
             mcPanel.Visible = false;
+            mcDataGridView.Rows.Clear(); //clear grid if button clicked to load solution
 
             byte[] SolutionFile = null;
 
@@ -208,6 +213,22 @@ namespace XRMSolutionDependencyChecker
                 return;
             }
 
+            //Get version of solution loaded
+            string fileVersion=solutionVersion(OpenSolution.FileName);
+            LogInfo("File Version: " + fileVersion);
+            string connectionVersion = targetVersion();
+            LogInfo("Connection Version: "+connectionVersion);
+
+
+            if (parseVersion(fileVersion)>parseVersion(connectionVersion))
+            {
+                outputText.Text += "Solution loaded is a version greater than the target connection. Unable to determine missing components" + Environment.NewLine;
+                outputText.Text += "Solution Version: " +fileVersion+ Environment.NewLine;
+                outputText.Text += "Connection Version: "+connectionVersion + Environment.NewLine;
+                return;
+            }
+
+
             WorkAsync(new WorkAsyncInfo
             {
                 Message = loadMessage,
@@ -222,7 +243,7 @@ namespace XRMSolutionDependencyChecker
                     }
                     catch (Exception mcExcept)
                     {
-                        outputText.Text += "Failed to read solution, check solution is valid" + Environment.NewLine + mcExcept.ToString() + Environment.NewLine; ;
+                        outputText.Text += "Failed to read solution, check solution is valid." + Environment.NewLine + "Exception:"+Environment.NewLine+mcExcept.ToString() + Environment.NewLine; ;
                         return;
                     }
 
@@ -235,7 +256,7 @@ namespace XRMSolutionDependencyChecker
                     //Check if empty object then return
                     if (eventargs.Result.GetType()!=typeof(MissingComponent[]))
                     {
-                        outputText.Text += "File is invalid. Please check you loaded a valid solution file";
+                        outputText.Text += "Unable to find missing components."+Environment.NewLine+"Result:"+Environment.NewLine+eventargs.Result.ToString();
                         return;
                     }
 
@@ -293,6 +314,32 @@ namespace XRMSolutionDependencyChecker
                 MessageHeight = 150
             });
         }
+
+        /// <summary>
+        /// Checks version of target connection
+        /// </summary>
+        /// <returns></returns>
+        private string targetVersion()
+        {
+            LogInfo("Starting check version");
+            RetrieveVersionRequest request = new RetrieveVersionRequest();
+            RetrieveVersionResponse response = (RetrieveVersionResponse)Service.Execute(request);
+            string version = response.Version;
+            LogInfo("Version found");
+            return version;
+        }
+
+        /// <summary>
+        /// Parse Version to Double
+        /// </summary>
+        /// <returns></returns>
+        private Double parseVersion(string version)
+        {
+            string subVersion = version.Substring(0, version.IndexOf(".") + 1);
+            Double parsedVersion = Double.Parse(subVersion);
+            return parsedVersion;
+        }
+
         /// <summary>
         /// Write missing components to the grid
         /// </summary>
@@ -329,10 +376,7 @@ namespace XRMSolutionDependencyChecker
                     //Increment grid height
                     gridHeight += 1;
 
-                }                
-
-                LogInfo("Check remove columns");
-
+                }
                 this.mcDataGridView.Height = gridHeight;
                 this.mcPanel.Width = gridWidth;
                 this.mcPanel.Height = gridHeight;
@@ -346,7 +390,48 @@ namespace XRMSolutionDependencyChecker
                 return "Failure";
             }
         }
+        /// <summary>
+        /// Extracts Solution Version from the file path specified to check if version is greater than connection
+        /// </summary>
+        /// <param name="filePath"></param>
+        /// <returns></returns>
+        public string solutionVersion(string filePath)
+        {
+            LogInfo("Checking solution version" + Environment.NewLine);
+            string version = "0.0";
+            string fileContents="";
+            try
+            {
+                //Extract solution.xml to check package version
+                ZipArchive solutionZip = ZipFile.Open(filePath, System.IO.Compression.ZipArchiveMode.Read);
+                foreach (ZipArchiveEntry entry in solutionZip.Entries)
+                {
+                    if (entry.Name.Equals("solution.xml"))
+                    {
+                        ZipArchiveEntry zipEntry = solutionZip.GetEntry(entry.Name);
 
+                        using (System.IO.StreamReader sr = new System.IO.StreamReader(zipEntry.Open()))
+                        {
+                            //read the contents into a string
+                            fileContents = sr.ReadToEnd();
+                        }
+                    }
+                }
+                LogInfo("Checking solution version | solution file read" + Environment.NewLine);
+                //Read the SolutionPackageVersion attribute from the root
+                XmlDocument solutionXML = new XmlDocument();
+                solutionXML.LoadXml(fileContents);
+                XmlElement root = solutionXML.DocumentElement;
+                version = root.Attributes["SolutionPackageVersion"].Value;
+            }
+            catch (Exception e)
+            {
+                LogError("Error checking solution version" + e.ToString());
+                throw;
+            }
+            LogInfo("Checking solution version | finished" + Environment.NewLine);
+            return version;
+        }
         /// <summary>
         /// Write missing components to CSV file
         /// </summary>
@@ -394,7 +479,7 @@ namespace XRMSolutionDependencyChecker
             }
 
             // write csv file
-            File.WriteAllText($@"{txt_OutputPath.Text}\SolutionDependencyChecker_" + DateTime.Now.ToString("yyyymmdd") + ".csv", csv.ToString());
+            File.WriteAllText($@"{txt_OutputPath.Text}\SolutionDependencyChecker_" + DateTime.Now.ToString("yyyyMMdd") + ".csv", csv.ToString());
 
             LogInfo("Success writing to CSV");
             return "Success";
