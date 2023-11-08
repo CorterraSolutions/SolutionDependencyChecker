@@ -486,7 +486,7 @@ namespace XRMSolutionDependencyChecker
         }
 
         /// <summary>
-        /// Output missing components to CSV file in user designated location and to in App grid
+        /// Check for missing components and return an object of components or a blank object
         /// </summary>
         /// <param name="ExportedSolution"></param>
         /// <returns> String signifiying if missing components were found or not </returns>
